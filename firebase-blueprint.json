@@ -1,0 +1,72 @@
+{
+  "entities": {
+    "Application": {
+      "title": "Application",
+      "description": "A job application submitted by a candidate",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "date": { "type": "string" },
+        "roleId": { "type": "string" },
+        "status": { "type": "string", "enum": ["New", "Reviewed", "Interviewed", "Rejected", "Hired"] },
+        "coverLetter": { "type": "string" },
+        "resumeUrl": { "type": "string" }
+      },
+      "required": ["name", "email", "phone", "date", "roleId", "status"]
+    },
+    "Admin": {
+      "title": "Admin",
+      "description": "An authenticated administrator of the system",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin"] }
+      },
+      "required": ["email", "role"]
+    },
+    "Testimonial": {
+      "title": "Testimonial",
+      "description": "A client testimonial displayed on the site",
+      "type": "object",
+      "properties": {
+        "quote": { "type": "string" },
+        "author": { "type": "string" },
+        "role": { "type": "string" },
+        "dateAdded": { "type": "string", "format": "date-time" }
+      },
+      "required": ["quote", "author", "role"]
+    },
+    "Contact": {
+      "title": "Contact",
+      "description": "A contact message submitted by a visitor",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "message": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "email", "message"]
+    }
+  },
+  "firestore": {
+    "/applications/{applicationId}": {
+      "schema": { "$ref": "#/entities/Application" },
+      "description": "Stores all the job application submissions"
+    },
+    "/admins/{adminId}": {
+      "schema": { "$ref": "#/entities/Admin" },
+      "description": "Stores authorized admin profiles"
+    },
+    "/testimonials/{testimonialId}": {
+      "schema": { "$ref": "#/entities/Testimonial" },
+      "description": "Stores client testimonials"
+    },
+    "/contacts/{contactId}": {
+      "schema": { "$ref": "#/entities/Contact" },
+      "description": "Stores user contact messages"
+    }
+  }
+}

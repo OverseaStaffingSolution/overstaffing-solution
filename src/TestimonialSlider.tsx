@@ -1,36 +1,67 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ChevronLeft, ChevronRight, Star, X } from 'lucide-react';
+import { useLanguage } from './LanguageContext';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from './firebase';
 
-const testimonials = [
-  {
-    quote: "Working with Overseas Staffing Solutions transformed our customer service operations. Their team is professional, responsive, and consistently delivers exceptional results. We reduced costs by 40% while improving customer satisfaction scores.",
-    author: "Maya Chen",
-    role: "Operations Director, TechFlow Solutions"
-  },
-  {
-    quote: "The quality of talent we received exceeded our expectations. The onboarding process was seamless, and the ongoing support has been outstanding. Our technical support team is now operating at peak efficiency.",
-    author: "Raj Patel",
-    role: "CEO, Meridian Labs"
-  },
-  {
-    quote: "Their multilingual support team helped us expand into new markets with confidence. The cultural alignment and language proficiency of their staff made all the difference in our international growth.",
-    author: "Lucia Torres",
-    role: "Customer Experience Manager, Global Commerce Inc"
-  },
-  {
-    quote: "Excellent service and reliable staffing solutions. The team is always available to address our needs, and the quality of work has been consistently high. A true partner in our business growth.",
-    author: "Kwame Asante",
-    role: "VP of Operations, Coastal Ventures"
-  },
-  {
-    quote: "From day one, their team integrated seamlessly with our operations. The professionalism and dedication of their staff have been instrumental in scaling our customer support without compromising quality.",
-    author: "Anika Bergström",
-    role: "Head of Customer Success, Nordic Digital"
-  }
-];
+interface Testimonial {
+  quote: string;
+  author: string;
+  role: string;
+}
 
 export default function TestimonialSlider() {
+  const { t } = useLanguage();
+
+  const defaultTestimonials: Testimonial[] = [
+    {
+      quote: t('testimonials.t1') || "Working with Overseas Staffing Solutions transformed our customer service operations. Their team is professional, responsive, and consistently delivers exceptional results. We reduced costs by 40% while improving customer satisfaction scores.",
+      author: "Maya Chen",
+      role: "Operations Director, TechFlow Solutions"
+    },
+    {
+      quote: t('testimonials.t2') || "The quality of talent we received exceeded our expectations. The onboarding process was seamless, and the ongoing support has been outstanding. Our technical support team is now operating at peak efficiency.",
+      author: "Raj Patel",
+      role: "CEO, Meridian Labs"
+    },
+    {
+      quote: t('testimonials.t3') || "Their multilingual support team helped us expand into new markets with confidence. The cultural alignment and language proficiency of their staff made all the difference in our international growth.",
+      author: "Lucia Torres",
+      role: "Customer Experience Manager, Global Commerce Inc"
+    },
+    {
+      quote: t('testimonials.t4') || "Excellent service and reliable staffing solutions. The team is always available to address our needs, and the quality of work has been consistently high. A true partner in our business growth.",
+      author: "Kwame Asante",
+      role: "VP of Operations, Coastal Ventures"
+    },
+    {
+      quote: t('testimonials.t5') || "From day one, their team integrated seamlessly with our operations. The professionalism and dedication of their staff have been instrumental in scaling our customer support without compromising quality.",
+      author: "Anika Bergström",
+      role: "Head of Customer Success, Nordic Digital"
+    }
+  ];
+
+  const [testimonials, setTestimonials] = useState<Testimonial[]>(defaultTestimonials);
+
+  useEffect(() => {
+    const fetchTestimonials = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'testimonials'));
+        if (!querySnapshot.empty) {
+          const fetched: Testimonial[] = [];
+          querySnapshot.forEach((doc) => {
+            fetched.push(doc.data() as Testimonial);
+          });
+          setTestimonials(fetched);
+        }
+      } catch (error) {
+        console.warn("Could not fetch testimonials from database, using defaults.");
+      }
+    };
+    fetchTestimonials();
+  }, [t]);
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
   const [isAutoPlay, setIsAutoPlay] = useState(true);
@@ -145,10 +176,10 @@ export default function TestimonialSlider() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-16">
           <span className="text-[#FC9905] font-bold tracking-widest uppercase text-xs mb-3 block">
-            CLIENT SUCCESS STORIES
+            {t('testimonials.badge') || "CLIENT SUCCESS STORIES"}
           </span>
           <h2 className="font-display text-3xl md:text-5xl font-extrabold text-[#110195] dark:text-white">
-            What Our Clients Say
+            {t('testimonials.title') || "What Our Clients Say"}
           </h2>
         </div>
 
@@ -238,7 +269,7 @@ export default function TestimonialSlider() {
 
         {/* Rating System */}
         <div className="mt-16 text-center">
-          <p className="text-[#1E293B] dark:text-[#E2E8F0] font-medium mb-4">Rate our services & share your experience</p>
+          <p className="text-[#1E293B] dark:text-[#E2E8F0] font-medium mb-4">{t('testimonials.rate') || 'Rate our services & share your experience'}</p>
           <div className="flex justify-center gap-2">
             {[1, 2, 3, 4, 5].map((star) => (
               <button

@@ -14,35 +14,38 @@ import {
   Cpu
 } from 'lucide-react';
 import Footer from './Footer';
+import { useLanguage } from './LanguageContext';
 
 export default function TechnicalSupport() {
+  const { t } = useLanguage();
+
   // Scroll to top on load
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   const responsibilities = [
-    "Diagnose and troubleshoot software, hardware, and network-related issues remotely.",
-    "Guide end-users step-by-step through phone calls, live chat sessions, or diagnostic emails with patience and pedagogy.",
-    "Log, categorize, and escalate complex support cases to Level 2 and Level 3 engineering teams.",
-    "Formulate and update internal technical wikis, FAQs, and product knowledge bases.",
-    "Preserve elevated quality benchmarks and speed resolution SLA metrics."
+    t("job.tech.resp1"),
+    t("job.tech.resp2"),
+    t("job.tech.resp3"),
+    t("job.tech.resp4"),
+    t("job.tech.resp5")
   ];
 
   const requirements = [
-    "Working knowledge of major operating systems (Windows, macOS, iOS, Android).",
-    "Familiarity with network baselines (WiFi setups, VPN, IP routing, TCP/IP, DNS).",
-    "Excellent diagnostic skills with a systematic, logical path to puzzle-solving.",
-    "Strong, patient, and pedagogical verbal and written english communication skills.",
-    "Prior technical customer support experience (Tier 1/Helpdesk or tech retail hubs)."
+    t("job.tech.req1"),
+    t("job.tech.req2"),
+    t("job.tech.req3"),
+    t("job.tech.req4"),
+    t("job.tech.req5")
   ];
 
   const benefits = [
-    "Highly competitive base salary + performance bonuses based on resolution accuracy.",
-    "Continuous certified technical development programs (compTIA, Microsoft, AWS options).",
-    "State-of-the-art diagnostic screens, high-end workstations, and noise-minimizing equipment.",
-    "Fascinating rapid career pathing to Network Administration, System Engineering, or Cyberspace Security.",
-    "Flexible rotational shifts to fit your learning schedules or family needs."
+    t("job.tech.offer1"),
+    t("job.tech.offer2"),
+    t("job.tech.offer3"),
+    t("job.tech.offer4"),
+    t("job.tech.offer5")
   ];
 
   return (
@@ -56,15 +59,15 @@ export default function TechnicalSupport() {
             <nav className="flex text-sm text-white/70" aria-label="Breadcrumb">
               <ol className="inline-flex items-center space-x-1 md:space-x-3">
                 <li>
-                  <Link to="/" className="hover:text-[#FC9905] transition-colors">Home</Link>
+                  <Link to="/" className="hover:text-[#FC9905] transition-colors">{t("footer.home")}</Link>
                 </li>
                 <li className="flex items-center">
                   <span className="mx-2">/</span>
-                  <span className="text-white/60">Careers</span>
+                  <span className="text-white/60">{t("footer.career")}</span>
                 </li>
                 <li className="flex items-center">
                   <span className="mx-2">/</span>
-                  <span className="text-white font-medium">Technical Support Agent</span>
+                  <span className="text-white font-medium">{t("job.tech.title")}</span>
                 </li>
               </ol>
             </nav>
@@ -74,7 +77,7 @@ export default function TechnicalSupport() {
               to="/" 
               className="inline-flex items-center gap-2 self-start text-sm font-medium px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl transition-all border border-white/10 hover:border-white/20 backdrop-blur-sm shadow-sm"
             >
-              <ArrowLeft size={16} /> Return to Home
+              <ArrowLeft size={16} /> {t("job.common.return_home")}
             </Link>
           </div>
           
@@ -85,13 +88,13 @@ export default function TechnicalSupport() {
             className="max-w-3xl"
           >
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#FC9905]/20 text-[#FC9905] uppercase tracking-wider mb-4">
-              <Sparkles className="w-3.5 h-3.5" /> We're hiring
+              <Sparkles className="w-3.5 h-3.5" /> {t("job.common.we_are_hiring")}
             </span>
             <h1 className="text-4xl md:text-5xl font-display font-bold text-white leading-tight mb-6">
-              Technical Support Agent
+              {t("job.tech.title")}
             </h1>
             <p className="text-lg md:text-xl text-white/90 font-light leading-relaxed">
-              Passionate about technology? Put your diagnostic expertise to work helping global users resolve complex software, host, and network anomalies.
+              {t("job.tech.hero_desc")}
             </p>
           </motion.div>
         </div>
@@ -112,17 +115,17 @@ export default function TechnicalSupport() {
             >
               <div>
                 <h2 className="text-2xl font-display font-bold text-[#0B2B5B] dark:text-white mb-4">
-                  Job Summary
+                  {t("job.common.summary_title")}
                 </h2>
                 <p className="text-lg leading-relaxed text-[#1E293B]/90 dark:text-[#E2E8F0]/90 font-light">
-                  Vous êtes passionné par la technologie et le service client ? Rejoignez notre équipe de support technique pour aider les utilisateurs à résoudre leurs problèmes matériels, logiciels ou réseaux. En tant que conseiller privilégié, vous guiderez nos partenaires avec patience et intelligence pratique.
+                  {t("job.tech.summary")}
                 </p>
               </div>
 
               {/* Responsibilities */}
               <div className="bg-white dark:bg-[#1E293B] p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
                 <h3 className="text-xl font-display font-semibold text-[#0B2B5B] dark:text-white mb-4 flex items-center gap-2">
-                  <Briefcase className="text-[#00A9A6] w-5 h-5" /> Main Responsibilities
+                  <Briefcase className="text-[#00A9A6] w-5 h-5" /> {t("job.tech.resp_title")}
                 </h3>
                 <ul className="space-y-3">
                   {responsibilities.map((resp, idx) => (
@@ -137,7 +140,7 @@ export default function TechnicalSupport() {
               {/* Requirements */}
               <div className="bg-white dark:bg-[#1E293B] p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
                 <h3 className="text-xl font-display font-semibold text-[#0B2B5B] dark:text-white mb-4 flex items-center gap-2">
-                  <GraduationCap className="text-[#00A9A6] w-5 h-5" /> Requirements & Competencies
+                  <GraduationCap className="text-[#00A9A6] w-5 h-5" /> {t("job.tech.req_title")}
                 </h3>
                 <ul className="space-y-3">
                   {requirements.map((req, idx) => (
@@ -152,7 +155,7 @@ export default function TechnicalSupport() {
               {/* What We Offer */}
               <div className="bg-white dark:bg-[#1E293B] p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
                 <h3 className="text-xl font-display font-semibold text-[#0B2B5B] dark:text-white mb-4 flex items-center gap-2">
-                  <Clock className="text-[#00A9A6] w-5 h-5" /> What We Offer
+                  <Clock className="text-[#00A9A6] w-5 h-5" /> {t("job.tech.offer_title")}
                 </h3>
                 <ul className="space-y-3">
                   {benefits.map((benefit, idx) => (
@@ -183,31 +186,31 @@ export default function TechnicalSupport() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0B2B5B]/80 via-transparent to-transparent pointer-events-none" />
                 <div className="absolute bottom-6 left-6 right-6 text-white">
-                  <p className="text-sm uppercase tracking-wider font-semibold text-[#FC9905]">Support Excellence</p>
-                  <p className="text-xl font-bold">Cutting edge equipment & certified growth</p>
+                  <p className="text-sm uppercase tracking-wider font-semibold text-[#FC9905]">{t("job.common.sidebar_title_tech")}</p>
+                  <p className="text-xl font-bold">{t("job.common.sidebar_subtitle_tech")}</p>
                 </div>
               </div>
 
               {/* Quick Info Block */}
               <div className="bg-gradient-to-br from-[#0B2B5B] to-[#110195] text-white p-8 rounded-2xl shadow-lg relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16 pointer-events-none" />
-                <h3 className="text-lg font-bold mb-4 border-b border-white/10 pb-2">Employment Summary</h3>
+                <h3 className="text-lg font-bold mb-4 border-b border-white/10 pb-2">{t("job.common.summary_sidebar_title")}</h3>
                 <div className="grid grid-cols-2 gap-4 text-sm font-light">
                   <div>
-                    <span className="text-white/60 block text-xs uppercase font-medium">Location</span>
+                    <span className="text-white/60 block text-xs uppercase font-medium">{t("job.common.sidebar_location")}</span>
                     <span className="font-medium">Pétion-Ville, Haïti / USA</span>
                   </div>
                   <div>
-                    <span className="text-white/60 block text-xs uppercase font-medium">Type</span>
-                    <span className="font-medium">Full-Time</span>
+                    <span className="text-white/60 block text-xs uppercase font-medium">{t("job.common.sidebar_type")}</span>
+                    <span className="font-medium">{t("job.common.sidebar_type_full")}</span>
                   </div>
                   <div>
-                    <span className="text-white/60 block text-xs uppercase font-medium">Work Mode</span>
-                    <span className="font-medium">On-Site / Helpdesk</span>
+                    <span className="text-white/60 block text-xs uppercase font-medium">{t("job.common.sidebar_mode")}</span>
+                    <span className="font-medium">{t("job.common.sidebar_mode_tech")}</span>
                   </div>
                   <div>
-                    <span className="text-white/60 block text-xs uppercase font-medium">Availability</span>
-                    <span className="font-medium">Immediate</span>
+                    <span className="text-white/60 block text-xs uppercase font-medium">{t("job.common.sidebar_availability")}</span>
+                    <span className="font-medium">{t("job.common.sidebar_avail_value")}</span>
                   </div>
                 </div>
               </div>
@@ -227,10 +230,10 @@ export default function TechnicalSupport() {
             className="space-y-4"
           >
             <h3 className="text-2xl font-display font-bold text-[#0B2B5B] dark:text-white">
-              About Oversea Staffing Solutions
+              {t("job.common.about_title")}
             </h3>
             <p className="text-[#1E293B]/80 dark:text-[#E2E8F0]/80 leading-relaxed font-light text-base">
-              At Oversea Staffing Solutions, we cultivate a vibrant workspace defined by intense teamwork, performance excellence, and deep-seated background diversity. Believing that customer support is an emotional art form, we empower our employees with leading training frameworks, highly supportive feedback structures, and advanced tools.
+              {t("job.common.about_desc")}
             </p>
             <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-[#110195] dark:text-[#FC9905] font-semibold pt-4">
               <span className="flex items-center gap-1"><MapPin size={16} /> Pétion-Ville, Haïti</span>
@@ -251,10 +254,10 @@ export default function TechnicalSupport() {
             className="space-y-6"
           >
             <h2 className="text-3xl md:text-4xl font-display font-bold text-[#0B2B5B] dark:text-white">
-              Prêt à rejoindre notre équipe ?
+              {t("job.common.cta_title")}
             </h2>
             <p className="text-lg text-[#1E293B]/80 dark:text-[#E2E8F0]/80 font-light max-w-xl mx-auto">
-              Send us your Resume along with an impactful Cover Letter. Our Recruitment Operations team will review and reply swiftly.
+              {t("job.common.cta_desc")}
             </p>
             
             <Link 
@@ -262,11 +265,11 @@ export default function TechnicalSupport() {
               to="/careers/apply/technical-support"
               className="inline-flex items-center gap-2 px-8 py-3 rounded-full bg-gradient-to-r from-[#FC9905] to-[#110195] text-white hover:scale-105 hover:shadow-lg hover:from-[#110195] hover:to-[#FC9905] transition-all duration-300 font-medium"
             >
-              <FileText size={18} /> Apply Now
+              <FileText size={18} /> {t("job.common.apply_now")}
             </Link>
             
             <p className="text-xs text-[#1E293B]/60 dark:text-[#E2E8F0]/50 italic">
-              Email inquiries: careers@overseastaffingsolutions.com
+              {t("job.common.email_inquiries")}
             </p>
           </motion.div>
         </div>

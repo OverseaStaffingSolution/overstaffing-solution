@@ -1,8 +1,59 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { Send, Mail, User, MessageSquare } from 'lucide-react';
+import { useLanguage } from './LanguageContext';
+import { collection, addDoc } from 'firebase/firestore';
+import { db, auth } from './firebase';
+
+enum OperationType {
+  CREATE = 'create',
+  UPDATE = 'update',
+  DELETE = 'delete',
+  LIST = 'list',
+  GET = 'get',
+  WRITE = 'write',
+}
+
+interface FirestoreErrorInfo {
+  error: string;
+  operationType: OperationType;
+  path: string | null;
+  authInfo: {
+    userId?: string | null;
+    email?: string | null;
+    emailVerified?: boolean | null;
+    isAnonymous?: boolean | null;
+    tenantId?: string | null;
+    providerInfo?: {
+      providerId?: string | null;
+      email?: string | null;
+    }[];
+  };
+}
+
+function handleFirestoreError(error: unknown, operationType: OperationType, path: string | null) {
+  const errInfo: FirestoreErrorInfo = {
+    error: error instanceof Error ? error.message : String(error),
+    authInfo: {
+      userId: auth.currentUser?.uid || null,
+      email: auth.currentUser?.email || null,
+      emailVerified: auth.currentUser?.emailVerified || null,
+      isAnonymous: auth.currentUser?.isAnonymous || null,
+      tenantId: auth.currentUser?.tenantId || null,
+      providerInfo: auth.currentUser?.providerData?.map(provider => ({
+        providerId: provider.providerId,
+        email: provider.email,
+      })) || []
+    },
+    operationType,
+    path
+  };
+  console.error('Firestore Error: ', JSON.stringify(errInfo));
+  throw new Error(JSON.stringify(errInfo));
+}
 
 export default function ContactForm() {
+  const { t } = useLanguage();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -16,33 +67,47 @@ export default function ContactForm() {
     setIsSubmitting(true);
     
     try {
-      const response = await fetch("https://formsubmit.co/ajax/contact@overseastaffingsolutions.com", {
-        method: "POST",
-        headers: { 
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify({
+      // 1. Enregistrer dans Firebase / Save to Firebase
+      try {
+        await addDoc(collection(db, 'contacts'), {
           name: formData.name,
           email: formData.email,
           message: formData.message,
-          _subject: "New Contact Form Submission from Oversea Staffing Solutions"
-        })
-      });
-      
-      if (response.ok) {
-        setIsSubmitted(true);
-        setFormData({ name: '', email: '', message: '' });
-        
-        // Reset success message after 5 seconds
-        setTimeout(() => {
-          setIsSubmitted(false);
-        }, 5000);
-      } else {
-        console.error("Form submission failed");
+          createdAt: new Date().toISOString()
+        });
+      } catch (firestoreErr) {
+        handleFirestoreError(firestoreErr, OperationType.CREATE, 'contacts');
       }
+
+      // 2. Envoyer par e-mail via FormSubmit (optionnel en arrière-plan) / Send via FormSubmit
+      try {
+        await fetch("https://formsubmit.co/ajax/contact@overseastaffingsolutions.com", {
+          method: "POST",
+          headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            name: formData.name,
+            email: formData.email,
+            message: formData.message,
+            _subject: "New Contact Form Submission from Oversea Staffing Solutions"
+          })
+        });
+      } catch (submitError) {
+        console.warn("Silent failure sending formsubmit:", submitError);
+      }
+      
+      setIsSubmitted(true);
+      setFormData({ name: '', email: '', message: '' });
+      
+      // Reset success message after 5 seconds
+      setTimeout(() => {
+        setIsSubmitted(false);
+      }, 5000);
     } catch (error) {
       console.error("Form submission error", error);
+      alert("Erreur lors de l'envoi du message. / Failed to submit your message. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -56,13 +121,13 @@ export default function ContactForm() {
   };
 
   return (
-    <section id="contact" className="py-24 bg-white dark:bg-[#1E293B] relative overflow-hidden">
+    <section id="contact" className="py-16 md:py-24 bg-white dark:bg-[#1E293B] relative overflow-hidden">
       {/* Background decorations */}
       <div className="absolute top-0 right-0 -mr-40 -mt-40 w-96 h-96 rounded-full bg-[#FC9905]/5 blur-3xl pointer-events-none"></div>
       <div className="absolute bottom-0 left-0 -ml-40 -mb-40 w-96 h-96 rounded-full bg-[#110195]/5 blur-3xl pointer-events-none"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="flex flex-col lg:flex-row gap-16 lg:gap-24 items-center">
+        <div className="flex flex-col lg:flex-row gap-10 lg:gap-24 items-center">
           
           {/* Text Content */}
           <motion.div 
@@ -72,12 +137,12 @@ export default function ContactForm() {
             transition={{ duration: 0.6 }}
             className="w-full lg:w-[45%] text-center lg:text-left"
           >
-            <span className="text-[#FC9905] font-semibold tracking-wider text-sm mb-3 block uppercase">Get in touch</span>
+            <span className="text-[#FC9905] font-semibold tracking-wider text-sm mb-3 block uppercase">{t('contact.badge')}</span>
             <h2 className="font-display text-4xl md:text-5xl font-bold text-[#110195] dark:text-white mb-6 leading-tight">
-              Ready to elevate your customer experience?
+              {t('contact.title')}
             </h2>
             <p className="text-lg text-[#1E293B] dark:text-[#E2E8F0] font-light leading-relaxed mb-8">
-              Reach out to our team today. We're here to answer your questions and help you find the perfect staffing solution tailored to your operational needs.
+              {t('contact.subtitle')}
             </p>
             
             <div className="space-y-6 hidden lg:block border-l-2 border-[#110195]/10 dark:border-white/10 pl-6">
@@ -86,7 +151,7 @@ export default function ContactForm() {
                   <Mail size={20} />
                 </div>
                 <div>
-                  <h4 className="font-semibold text-lg text-[#110195] dark:text-white mb-1">Email Us</h4>
+                  <h4 className="font-semibold text-lg text-[#110195] dark:text-white mb-1">{t('contact.email')}</h4>
                   <p className="text-[#1E293B] dark:text-[#E2E8F0] font-light">contact@overseastaffingsolutions.com</p>
                 </div>
               </div>
@@ -95,8 +160,8 @@ export default function ContactForm() {
                   <MessageSquare size={20} />
                 </div>
                 <div>
-                  <h4 className="font-semibold text-lg text-[#110195] dark:text-white mb-1">Live Chat</h4>
-                  <p className="text-[#1E293B] dark:text-[#E2E8F0] font-light">Available 24/7 for you</p>
+                  <h4 className="font-semibold text-lg text-[#110195] dark:text-white mb-1">{t('contact.livechat')}</h4>
+                  <p className="text-[#1E293B] dark:text-[#E2E8F0] font-light">{t('contact.availability')}</p>
                 </div>
               </div>
             </div>
@@ -110,7 +175,7 @@ export default function ContactForm() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="w-full lg:w-[55%]"
           >
-            <div className="bg-white dark:bg-[#0F172A] p-8 md:p-10 rounded-2xl shadow-xl shadow-black/5 dark:shadow-black/20 border border-gray-100 dark:border-white/5 relative">
+            <div className="bg-white dark:bg-[#0F172A] p-6 sm:p-8 md:p-10 rounded-2xl shadow-xl shadow-black/5 dark:shadow-black/20 border border-gray-100 dark:border-white/5 relative">
               
               {/* Success Message Overlay */}
               {isSubmitted && (

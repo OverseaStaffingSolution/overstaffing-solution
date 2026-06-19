@@ -2,19 +2,20 @@ import React, { useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { 
-  Award, 
   CheckCircle2, 
   Sparkles, 
   ArrowRight,
   ArrowLeft,
   TrendingUp,
-  Briefcase,
   Layers,
   CheckCircle
 } from 'lucide-react';
 import Footer from './Footer';
+import { useLanguage } from './LanguageContext';
 
 export default function SalesLeadQualification() {
+  const { t } = useLanguage();
+
   // Scroll to top on load
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -22,38 +23,38 @@ export default function SalesLeadQualification() {
 
   const points = [
     {
-      title: "Strict Qualification Frameworks",
-      desc: "Our agents filter prospects using standard structures like BANT (Budget, Authority, Need, Timeline) to isolate transaction-ready leads."
+      title: t('sd.sl.pt1_title'),
+      desc: t('sd.sl.pt1_desc')
     },
     {
-      title: "Warm Transfer Logistics",
-      desc: "Once a prospect is qualified, we perform real-time, three-way warm handoffs directly to your internal account executives."
+      title: t('sd.sl.pt2_title'),
+      desc: t('sd.sl.pt2_desc')
     },
     {
-      title: "Inbound Catalog Assistance",
-      desc: "We answer inbound prospect calls with complete product expertise, converting hot curiosity into immediate sales bookings."
+      title: t('sd.sl.pt3_title'),
+      desc: t('sd.sl.pt3_desc')
     },
     {
-      title: "Proactive Data Appending",
-      desc: "We collect missing profile details during qualification, handing your closing team rich context for their proposals."
+      title: t('sd.sl.pt4_title'),
+      desc: t('sd.sl.pt4_desc')
     }
   ];
 
   const reasons = [
     {
       icon: TrendingUp,
-      title: "Shorter Sales Cycle",
-      desc: "Enabling your senior closers to focus purely on vetted, interest-proven targets, drastically shrinking deal durations."
+      title: t('sd.sl.why1_title'),
+      desc: t('sd.sl.why1_desc')
     },
     {
       icon: CheckCircle,
-      title: "High Client Satisfaction",
-      desc: "We balance enthusiastic value-pitching with genuine respect, ensuring a high quality initial brand association."
+      title: t('sd.sl.why2_title'),
+      desc: t('sd.sl.why2_desc')
     },
     {
       icon: Layers,
-      title: "Sustained ROI Boost",
-      desc: "An active qualifying filter optimizes your sales overhead and enhances your overall lead-to-opportunity ratio."
+      title: t('sd.sl.why3_title'),
+      desc: t('sd.sl.why3_desc')
     }
   ];
 
@@ -68,15 +69,15 @@ export default function SalesLeadQualification() {
             <nav className="flex text-sm text-white/70" aria-label="Breadcrumb">
               <ol className="inline-flex items-center space-x-1 md:space-x-3">
                 <li>
-                  <Link to="/" className="hover:text-[#FC9905] transition-colors">Home</Link>
+                  <Link to="/" className="hover:text-[#FC9905] transition-colors">{t('nav.home')}</Link>
                 </li>
                 <li className="flex items-center">
                   <span className="mx-2">/</span>
-                  <span className="text-white/60">Services</span>
+                  <span className="text-white/60">{t('nav.services')}</span>
                 </li>
                 <li className="flex items-center">
                   <span className="mx-2">/</span>
-                  <span className="text-white font-medium">Sales Lead Qualification</span>
+                  <span className="text-white font-medium">{t('nav.customerSupport')}</span> {/* Aligning generic services naming */}
                 </li>
               </ol>
             </nav>
@@ -85,7 +86,7 @@ export default function SalesLeadQualification() {
               to="/" 
               className="inline-flex items-center gap-2 self-start text-sm font-medium px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl transition-all border border-white/10 hover:border-white/20 backdrop-blur-sm shadow-sm"
             >
-              <ArrowLeft size={16} /> Return to Home
+              <ArrowLeft size={16} /> {t('about.back')}
             </Link>
           </div>
           
@@ -96,13 +97,13 @@ export default function SalesLeadQualification() {
             className="max-w-3xl"
           >
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#FC9905]/20 text-[#FC9905] uppercase tracking-wider mb-4">
-              <Sparkles className="w-3.5 h-3.5" /> High-Performance Sales Filter
+              <Sparkles className="w-3.5 h-3.5" /> {t('sd.sl.badge')}
             </span>
-            <h1 className="text-4xl md:text-6xl font-display font-bold text-white leading-tight mb-6">
-              Sales Lead Qualification
+            <h1 className="text-4xl md:text-6xl font-display font-bold text-white leading-tight mb-6 animate-fade-in">
+              {t('sd.sl.title')}
             </h1>
             <p className="text-lg md:text-xl text-white/90 font-light leading-relaxed">
-              Accelerate your sales revenue pipeline by handing your account executives highly qualified, verified prospects with immediate buying intent.
+              {t('sd.sl.hero_desc')}
             </p>
           </motion.div>
         </div>
@@ -122,21 +123,21 @@ export default function SalesLeadQualification() {
               className="space-y-6"
             >
               <h2 className="text-3xl font-display font-bold text-[#110195] dark:text-white mb-4">
-                Enabling sales excellence through professional qualifications
+                {t('sd.sl.sec1_title')}
               </h2>
               
               <p className="text-lg leading-relaxed text-[#1E293B]/90 dark:text-[#E2E8F0]/90 font-light">
-                With lead generation and sales-focused services, Oversea Staffing Solutions inbound and outbound call center solutions help with not just hitting sales targets but also customer satisfaction and thus client satisfaction.
+                {t('sd.sl.sec1_desc1')}
               </p>
               
               <p className="leading-relaxed font-light">
-                Sales resources are most efficient when close rates are maximized. Our nearshore Caribbean specialists work on the front line of your sales development program. We filter warm leads, scrub prospect lists, remove cold records, and schedule high-probability appointments right into your division schedules.
+                {t('sd.sl.sec1_desc2')}
               </p>
 
               {/* Bullet Points with Icons */}
               <div className="pt-6 space-y-4">
                 <h3 className="text-xl font-display font-semibold text-[#110195] dark:text-[#FC9905]">
-                  Our Operational Highlights:
+                  {t('sd.sl.point_title')}
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {points.map((point, index) => (
@@ -163,8 +164,8 @@ export default function SalesLeadQualification() {
               <div className="relative group">
                 <div className="absolute -inset-1.5 bg-gradient-to-r from-[#110195] to-[#FC9905] rounded-3xl blur opacity-30 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
                 <img 
-                  src="https://images.unsplash.com/photo-1552581230-c01591d529b3?auto=format&fit=crop&q=80&w=800" 
-                  alt="Sales team explaining project metrics" 
+                  src="https://images.unsplash.com/photo-1552581234-2612b75d8953?auto=format&fit=crop&q=80&w=800" 
+                  alt="Sales Lead Qualification" 
                   className="relative rounded-2xl shadow-xl max-w-full h-auto object-cover border border-white/10"
                 />
               </div>
@@ -179,7 +180,7 @@ export default function SalesLeadQualification() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-display font-bold text-[#110195] dark:text-white">
-              Why Turn to Our Sales Qualification?
+              {t('sd.sl.why_title')}
             </h2>
             <div className="w-16 h-1 bg-gradient-to-r from-[#110195] to-[#FC9905] mx-auto mt-4 rounded-full"></div>
           </div>
@@ -222,21 +223,21 @@ export default function SalesLeadQualification() {
             className="space-y-6"
           >
             <h2 className="text-3xl md:text-5xl font-display font-bold text-white leading-tight">
-              Prêt à accélérer vos conversions ?
+              {t('sd.sl.cta_title')}
             </h2>
             <p className="text-lg text-white/80 font-light max-w-2xl mx-auto">
-              Partner with Oversea Staffing Solutions to schedule high-probability appointments and optimize your sales efficiency.
+              {t('sd.sl.cta_desc')}
             </p>
             <div className="pt-4">
               <Link 
                 to="/contact" 
                 className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-[#FC9905] to-[#110195] hover:from-[#110195] hover:to-[#FC9905] text-white font-semibold rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105"
               >
-                Contactez notre équipe <ArrowRight size={18} />
+                {t('sd.sl.cta_btn')} <ArrowRight size={18} />
               </Link>
             </div>
             <p className="text-xs text-white/50 font-light">
-              Réponse assurée sous 24h ouvrées
+              {t('sd.sl.cta_small')}
             </p>
           </motion.div>
         </div>

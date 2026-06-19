@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Allow: /about-us
+Allow: /contact
+Allow: /services/
+Allow: /careers/
+Disallow: /admin
+Disallow: /careers/apply/
+
+Sitemap: https://www.overseastaffingsolutions.com/sitemap.xml

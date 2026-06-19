@@ -4,32 +4,35 @@ import { Mail, Phone, MapPin, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import ContactForm from './ContactForm';
 import Footer from './Footer';
-
-const contactMethods = [
-  {
-    title: 'Email Address',
-    info: 'contact@overseastaffingsolutions.com',
-    icon: <Mail size={48} strokeWidth={1} />,
-    color: 'from-blue-500/10 to-indigo-500/10 text-[#110195] dark:text-blue-400',
-    delay: 0.1
-  },
-  {
-    title: 'Phone Number',
-    info: '+1 (800) 123-4567',
-    icon: <Phone size={48} strokeWidth={1} />,
-    color: 'from-orange-500/10 to-amber-500/10 text-[#FC9905]',
-    delay: 0.2
-  },
-  {
-    title: 'Locations',
-    info: 'Pétion-Ville, Haiti\nGeorgia, USA',
-    icon: <MapPin size={48} strokeWidth={1} />,
-    color: 'from-emerald-500/10 to-teal-500/10 text-emerald-600 dark:text-emerald-400',
-    delay: 0.3
-  }
-];
+import { useLanguage } from './LanguageContext';
 
 export default function ContactPage() {
+  const { t } = useLanguage();
+
+  const contactMethods = [
+    {
+      title: t('contact.method.email') || 'Email Address',
+      info: 'contact@overseastaffingsolutions.com',
+      icon: <Mail size={48} strokeWidth={1} />,
+      color: 'from-blue-500/10 to-indigo-500/10 text-[#110195] dark:text-blue-400',
+      delay: 0.1
+    },
+    {
+      title: t('contact.method.phone') || 'Phone Number',
+      info: '+1 (800) 123-4567',
+      icon: <Phone size={48} strokeWidth={1} />,
+      color: 'from-orange-500/10 to-amber-500/10 text-[#FC9905]',
+      delay: 0.2
+    },
+    {
+      title: t('contact.method.locations') || 'Locations',
+      info: 'Pétion-Ville, Haiti\nGeorgia, USA',
+      icon: <MapPin size={48} strokeWidth={1} />,
+      color: 'from-emerald-500/10 to-teal-500/10 text-emerald-600 dark:text-emerald-400',
+      delay: 0.3
+    }
+  ];
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);

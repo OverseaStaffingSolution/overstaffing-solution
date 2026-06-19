@@ -2,7 +2,56 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Upload, FileText, Send, CheckCircle, Briefcase, Paperclip } from 'lucide-react';
+import { db, auth } from './firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import Footer from './Footer';
+
+enum OperationType {
+  CREATE = 'create',
+  UPDATE = 'update',
+  DELETE = 'delete',
+  LIST = 'list',
+  GET = 'get',
+  WRITE = 'write',
+}
+
+interface FirestoreErrorInfo {
+  error: string;
+  operationType: OperationType;
+  path: string | null;
+  authInfo: {
+    userId?: string | null;
+    email?: string | null;
+    emailVerified?: boolean | null;
+    isAnonymous?: boolean | null;
+    tenantId?: string | null;
+    providerInfo?: {
+      providerId?: string | null;
+      email?: string | null;
+    }[];
+  };
+}
+
+function handleFirestoreError(error: unknown, operationType: OperationType, path: string | null) {
+  const errInfo: FirestoreErrorInfo = {
+    error: error instanceof Error ? error.message : String(error),
+    authInfo: {
+      userId: auth.currentUser?.uid || null,
+      email: auth.currentUser?.email || null,
+      emailVerified: auth.currentUser?.emailVerified || null,
+      isAnonymous: auth.currentUser?.isAnonymous || null,
+      tenantId: auth.currentUser?.tenantId || null,
+      providerInfo: auth.currentUser?.providerData?.map(provider => ({
+        providerId: provider.providerId,
+        email: provider.email,
+      })) || []
+    },
+    operationType,
+    path
+  };
+  console.error('Firestore Error: ', JSON.stringify(errInfo));
+  throw new Error(JSON.stringify(errInfo));
+}
 
 const jobTitles: Record<string, string> = {
   'customer-service-representative': 'Customer Service Representative',
@@ -14,6 +63,7 @@ const jobTitles: Record<string, string> = {
 export default function ApplicationForm() {
   const { jobId } = useParams<{ jobId: string }>();
   const jobTitle = jobId && jobTitles[jobId] ? jobTitles[jobId] : jobTitles['general'];
+  const actualRoleId = jobId || 'general';
   
   const [formData, setFormData] = useState({
     firstName: '',
@@ -41,15 +91,33 @@ export default function ApplicationForm() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate API call
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      try {
+        await addDoc(collection(db, 'applications'), {
+          name: `${formData.firstName} ${formData.lastName}`,
+          email: formData.email,
+          phone: formData.phone,
+          date: new Date().toISOString().split('T')[0],
+          roleId: actualRoleId,
+          status: 'New',
+          coverLetter: formData.coverLetter,
+          resumeUrl: fileName || 'Uploaded File', // Since no bucket storage is set up yet
+          createdAt: serverTimestamp()
+        });
+      } catch (firestoreErr) {
+        handleFirestoreError(firestoreErr, OperationType.CREATE, 'applications');
+      }
       setIsSuccess(true);
-    }, 1500);
+    } catch (error) {
+      console.error("Error submitting application", error);
+      alert("Failed to submit application. Please try again later.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (

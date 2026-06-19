@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Plus, X, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useLanguage } from './LanguageContext';
 
 const jobListings = [
   {
@@ -48,6 +49,7 @@ interface FloatingCardProps {
 }
 
 const FloatingCard: React.FC<FloatingCardProps> = ({ currentJob, index, expandedIndex, setExpandedIndex }) => {
+  const { t } = useLanguage();
   const isExpanded = expandedIndex === index;
   const isAnyExpanded = expandedIndex !== null;
 
@@ -106,7 +108,7 @@ const FloatingCard: React.FC<FloatingCardProps> = ({ currentJob, index, expanded
                 </p>
                 <div>
                   <h4 className="font-semibold text-[#110195] dark:text-white mb-3 text-sm uppercase tracking-wider">
-                    Key Requirements
+                    {t('career.requirements')}
                   </h4>
                   <ul className="space-y-2">
                     {currentJob.reqs.map((req, i) => (
@@ -119,7 +121,7 @@ const FloatingCard: React.FC<FloatingCardProps> = ({ currentJob, index, expanded
                 </div>
                 <div className="mt-8">
                   <Link to="/careers/apply/general" className="w-full inline-block px-8 py-3 rounded-full bg-gradient-to-r from-[#FC9905] to-[#110195] text-white hover:scale-105 hover:shadow-lg hover:from-[#110195] hover:to-[#FC9905] transition-all duration-300 font-medium text-center">
-                    Apply Now
+                    {t('nav.applyNow')}
                   </Link>
                 </div>
               </motion.div>
@@ -162,7 +164,7 @@ const FloatingCard: React.FC<FloatingCardProps> = ({ currentJob, index, expanded
                   </p>
                   <div>
                     <h4 className="font-semibold text-[#110195] dark:text-white mb-2 text-sm">
-                      Requirements:
+                      {t('career.requirementsMobile')}
                     </h4>
                     <ul className="space-y-2">
                       {currentJob.reqs.map((req, i) => (
@@ -175,7 +177,7 @@ const FloatingCard: React.FC<FloatingCardProps> = ({ currentJob, index, expanded
                   </div>
                   <div className="mt-6">
                     <Link to="/careers/apply/general" className="w-full inline-block px-8 py-3 rounded-full bg-gradient-to-r from-[#FC9905] to-[#110195] text-white hover:scale-105 hover:shadow-lg hover:from-[#110195] hover:to-[#FC9905] transition-all duration-300 font-medium text-center">
-                      Apply Now
+                      {t('nav.applyNow')}
                     </Link>
                   </div>
                 </div>
@@ -189,7 +191,41 @@ const FloatingCard: React.FC<FloatingCardProps> = ({ currentJob, index, expanded
 };
 
 export default function FloatingCards() {
+  const { t } = useLanguage();
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
+
+  const jobListings = [
+    {
+      title: t('career.job1.title'),
+      desc: t('career.job1.desc'),
+      reqs: [
+        t('career.job1.req1'),
+        t('career.job1.req2'),
+        t('career.job1.req3'),
+        t('career.job1.req4')
+      ]
+    },
+    {
+      title: t('career.job2.title'),
+      desc: t('career.job2.desc'),
+      reqs: [
+        t('career.job2.req1'),
+        t('career.job2.req2'),
+        t('career.job2.req3'),
+        t('career.job2.req4')
+      ]
+    },
+    {
+      title: t('career.job3.title'),
+      desc: t('career.job3.desc'),
+      reqs: [
+        t('career.job3.req1'),
+        t('career.job3.req2'),
+        t('career.job3.req3'),
+        t('career.job3.req4')
+      ]
+    }
+  ];
 
   // Close when clicking outside
   const handleBackgroundClick = () => {
@@ -207,13 +243,13 @@ export default function FloatingCards() {
       <div className="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-12 md:mb-16">
           <span className="text-[#FC9905] font-semibold tracking-wider uppercase text-sm mb-4 block">
-            Careers
+            {t('career.badge')}
           </span>
           <h2 className="font-display text-4xl md:text-5xl font-bold text-[#110195] dark:text-white mb-4">
-            Join our team
+            {t('career.title')}
           </h2>
           <p className="text-lg text-[#1E293B] dark:text-[#E2E8F0]/80 font-light max-w-2xl mx-auto">
-            Build your career with a company that values growth, diversity, and excellence
+            {t('career.subtitle')}
           </p>
         </div>
 

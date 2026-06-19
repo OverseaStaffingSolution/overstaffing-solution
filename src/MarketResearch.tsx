@@ -2,19 +2,20 @@ import React, { useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { 
-  BarChart, 
   CheckCircle2, 
   Sparkles, 
   ArrowRight,
   ArrowLeft,
   TrendingUp,
   FileSpreadsheet,
-  Globe2,
   LineChart
 } from 'lucide-react';
 import Footer from './Footer';
+import { useLanguage } from './LanguageContext';
 
 export default function MarketResearch() {
+  const { t } = useLanguage();
+
   // Scroll to top on load
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -22,38 +23,38 @@ export default function MarketResearch() {
 
   const points = [
     {
-      title: "Diverse Sourcing Methods",
-      desc: "Our research masters gather high-quality information from diverse external sources, primary registries, databases, and focused direct phone calls."
+      title: t('sd.mr.pt1_title'),
+      desc: t('sd.mr.pt1_desc')
     },
     {
-      title: "Data Cleansing and Verification",
-      desc: "We wash, sort, and verify data profiles to purge obsolete inputs, duplicate entries, and incorrect contact elements thoroughly."
+      title: t('sd.mr.pt2_title'),
+      desc: t('sd.mr.pt2_desc')
     },
     {
-      title: "Structured Survey Logistics",
-      desc: "Experienced calling teams conduct objective surveys to collect un-biased feedback on product fits, brand awareness, or public satisfaction."
+      title: t('sd.mr.pt3_title'),
+      desc: t('sd.mr.pt3_desc')
     },
     {
-      title: "Dynamic KPI Dashboards",
-      desc: "Receive clear, detailed analytical summaries containing segmented data categories that present actionable feedback for your leadership."
+      title: t('sd.mr.pt4_title'),
+      desc: t('sd.mr.pt4_desc')
     }
   ];
 
   const reasons = [
     {
       icon: LineChart,
-      title: "Insight-Driven Decisions",
-      desc: "Replace assumptions with hard statistical facts to minimize operational risks in product rollouts."
+      title: t('sd.mr.why1_title'),
+      desc: t('sd.mr.why1_desc')
     },
     {
       icon: FileSpreadsheet,
-      title: "Enriched Registries",
-      desc: "Maintain your databases with highly accurate details about customer preferences and competitor trends."
+      title: t('sd.mr.why2_title'),
+      desc: t('sd.mr.why2_desc')
     },
     {
       icon: TrendingUp,
-      title: "Flexible Strategies",
-      desc: "Our nearshore agents gather intelligence efficiently, allowing quick adaptions to incoming industry conditions."
+      title: t('sd.mr.why3_title'),
+      desc: t('sd.mr.why3_desc')
     }
   ];
 
@@ -68,15 +69,15 @@ export default function MarketResearch() {
             <nav className="flex text-sm text-white/70" aria-label="Breadcrumb">
               <ol className="inline-flex items-center space-x-1 md:space-x-3">
                 <li>
-                  <Link to="/" className="hover:text-[#FC9905] transition-colors">Home</Link>
+                  <Link to="/" className="hover:text-[#FC9905] transition-colors">{t('nav.home')}</Link>
                 </li>
                 <li className="flex items-center">
                   <span className="mx-2">/</span>
-                  <span className="text-white/60">Services</span>
+                  <span className="text-white/60">{t('nav.services')}</span>
                 </li>
                 <li className="flex items-center">
                   <span className="mx-2">/</span>
-                  <span className="text-white font-medium">Market Research</span>
+                  <span className="text-white font-medium">{t('nav.liveChat')}</span> {/* Or standard service breadcrumb */}
                 </li>
               </ol>
             </nav>
@@ -85,7 +86,7 @@ export default function MarketResearch() {
               to="/" 
               className="inline-flex items-center gap-2 self-start text-sm font-medium px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl transition-all border border-white/10 hover:border-white/20 backdrop-blur-sm shadow-sm"
             >
-              <ArrowLeft size={16} /> Return to Home
+              <ArrowLeft size={16} /> {t('about.back')}
             </Link>
           </div>
           
@@ -96,13 +97,13 @@ export default function MarketResearch() {
             className="max-w-3xl"
           >
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#FC9905]/20 text-[#FC9905] uppercase tracking-wider mb-4">
-              <Sparkles className="w-3.5 h-3.5" /> Analytical Data Intel
+              <Sparkles className="w-3.5 h-3.5" /> {t('sd.mr.badge')}
             </span>
-            <h1 className="text-4xl md:text-6xl font-display font-bold text-white leading-tight mb-6">
-              Market Research & Surveys
+            <h1 className="text-4xl md:text-6xl font-display font-bold text-white leading-tight mb-6 animate-fade-in">
+              {t('sd.mr.title')}
             </h1>
             <p className="text-lg md:text-xl text-white/90 font-light leading-relaxed">
-              Leverage detailed methodologies, multi-source intelligence gathering, and verified survey results to capture actionable market perspective.
+              {t('sd.mr.hero_desc')}
             </p>
           </motion.div>
         </div>
@@ -122,21 +123,21 @@ export default function MarketResearch() {
               className="space-y-6"
             >
               <h2 className="text-3xl font-display font-bold text-[#110195] dark:text-white mb-4">
-                Accelerate data reliability with validated research loops
+                {t('sd.mr.sec1_title')}
               </h2>
               
               <p className="text-lg leading-relaxed text-[#1E293B]/90 dark:text-[#E2E8F0]/90 font-light">
-                Our team of research experts performs various research methodologies to gather required information from various sources.
+                {t('sd.mr.sec1_desc1')}
               </p>
               
               <p className="leading-relaxed font-light">
-                Making strategic business decisions requires trusted, vetted statistical structures. At Oversea Staffing Solutions, we provide targeted qualitative and quantitative research sequences. Our bilingual Caribbean agents establish responsive direct-call surveys, execute digital research audits, verify directories, and cleanse lead indices to give your organization unmatched data precision.
+                {t('sd.mr.sec1_desc2')}
               </p>
 
               {/* Bullet Points with Icons */}
               <div className="pt-6 space-y-4">
                 <h3 className="text-xl font-display font-semibold text-[#110195] dark:text-[#FC9905]">
-                  Our Operational Highlights:
+                  {t('sd.mr.point_title')}
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {points.map((point, index) => (
@@ -164,7 +165,7 @@ export default function MarketResearch() {
                 <div className="absolute -inset-1.5 bg-gradient-to-r from-[#110195] to-[#FC9905] rounded-3xl blur opacity-30 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
                 <img 
                   src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800" 
-                  alt="Market research data charts on desk" 
+                  alt="Market Research Analysis" 
                   className="relative rounded-2xl shadow-xl max-w-full h-auto object-cover border border-white/10"
                 />
               </div>
@@ -179,7 +180,7 @@ export default function MarketResearch() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-display font-bold text-[#110195] dark:text-white">
-              Why Opt for Our Market Research?
+              {t('sd.mr.why_title')}
             </h2>
             <div className="w-16 h-1 bg-gradient-to-r from-[#110195] to-[#FC9905] mx-auto mt-4 rounded-full"></div>
           </div>
@@ -222,21 +223,21 @@ export default function MarketResearch() {
             className="space-y-6"
           >
             <h2 className="text-3xl md:text-5xl font-display font-bold text-white leading-tight">
-              Prêt à lancer des recherches précises ?
+              {t('sd.mr.cta_title')}
             </h2>
             <p className="text-lg text-white/80 font-light max-w-2xl mx-auto">
-              Partner with Oversea Staffing Solutions to establish deep, clean research programs backed by highly precise data gathering standards.
+              {t('sd.mr.cta_desc')}
             </p>
             <div className="pt-4">
               <Link 
                 to="/contact" 
                 className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-[#FC9905] to-[#110195] hover:from-[#110195] hover:to-[#FC9905] text-white font-semibold rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105"
               >
-                Contactez notre équipe <ArrowRight size={18} />
+                {t('sd.mr.cta_btn')} <ArrowRight size={18} />
               </Link>
             </div>
             <p className="text-xs text-white/50 font-light">
-              Réponse assurée sous 24h ouvrées
+              {t('sd.mr.cta_small')}
             </p>
           </motion.div>
         </div>

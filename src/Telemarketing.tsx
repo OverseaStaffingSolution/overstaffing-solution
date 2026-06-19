@@ -2,19 +2,20 @@ import React, { useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { 
-  Phone, 
   CheckCircle2, 
   Sparkles, 
   ArrowRight,
   ArrowLeft,
   TrendingUp,
-  MessageSquare,
   Activity,
   UserCheck
 } from 'lucide-react';
 import Footer from './Footer';
+import { useLanguage } from './LanguageContext';
 
 export default function Telemarketing() {
+  const { t } = useLanguage();
+
   // Scroll to top on load
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -22,38 +23,38 @@ export default function Telemarketing() {
 
   const points = [
     {
-      title: "Vigorous Script Engineering",
-      desc: "Our outbound copymasters draft structured call guidelines that align with your unique solutions, maximizing customer attention."
+      title: t('sd.tm.pt1_title'),
+      desc: t('sd.tm.pt1_desc')
     },
     {
-      title: "CRM Integration & Analytics",
-      desc: "Direct pairing with major sales software suites to track dialing velocity, call outcomes, and campaign return rates flawlessly."
+      title: t('sd.tm.pt2_title'),
+      desc: t('sd.tm.pt2_desc')
     },
     {
-      title: "Highly Motivated Representatives",
-      desc: "With a strongly motivated and performance-incentivized environment, our telemarketers maintain maximum productivity levels."
+      title: t('sd.tm.pt3_title'),
+      desc: t('sd.tm.pt3_desc')
     },
     {
-      title: "Comprehensive Compliance Alignments",
-      desc: "We strictly observe TCF and country-specific outbound call rules, ensuring robust security and legal peace of mind."
+      title: t('sd.tm.pt4_title'),
+      desc: t('sd.tm.pt4_desc')
     }
   ];
 
   const reasons = [
     {
       icon: TrendingUp,
-      title: "Expanded Customer Reach",
-      desc: "Vastly increase brand awareness by contacting highly targeted B2B or B2C registries every business day."
+      title: t('sd.tm.why1_title'),
+      desc: t('sd.tm.why1_desc')
     },
     {
       icon: Activity,
-      title: "Real-time Fine Tuning",
-      desc: "We track and refine campaign angles daily, letting us adapt script tactics dynamically to enhance close ratios."
+      title: t('sd.tm.why2_title'),
+      desc: t('sd.tm.why2_desc')
     },
     {
       icon: UserCheck,
-      title: "High Integrity Standards",
-      desc: "We prioritize patient objection handling, assuring your company's positive brand image is maintained on every call."
+      title: t('sd.tm.why3_title'),
+      desc: t('sd.tm.why3_desc')
     }
   ];
 
@@ -68,15 +69,15 @@ export default function Telemarketing() {
             <nav className="flex text-sm text-white/70" aria-label="Breadcrumb">
               <ol className="inline-flex items-center space-x-1 md:space-x-3">
                 <li>
-                  <Link to="/" className="hover:text-[#FC9905] transition-colors">Home</Link>
+                  <Link to="/" className="hover:text-[#FC9905] transition-colors">{t('nav.home')}</Link>
                 </li>
                 <li className="flex items-center">
                   <span className="mx-2">/</span>
-                  <span className="text-white/60">Services</span>
+                  <span className="text-white/60">{t('nav.services')}</span>
                 </li>
                 <li className="flex items-center">
                   <span className="mx-2">/</span>
-                  <span className="text-white font-medium">Telemarketing</span>
+                  <span className="text-white font-medium">{t('nav.customerSupport')}</span> {/* Aligning generic services naming */}
                 </li>
               </ol>
             </nav>
@@ -85,7 +86,7 @@ export default function Telemarketing() {
               to="/" 
               className="inline-flex items-center gap-2 self-start text-sm font-medium px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl transition-all border border-white/10 hover:border-white/20 backdrop-blur-sm shadow-sm"
             >
-              <ArrowLeft size={16} /> Return to Home
+              <ArrowLeft size={16} /> {t('about.back')}
             </Link>
           </div>
           
@@ -96,13 +97,13 @@ export default function Telemarketing() {
             className="max-w-3xl"
           >
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#FC9905]/20 text-[#FC9905] uppercase tracking-wider mb-4">
-              <Sparkles className="w-3.5 h-3.5" /> Direct Tele-sales Campaigns
+              <Sparkles className="w-3.5 h-3.5" /> {t('sd.tm.badge')}
             </span>
-            <h1 className="text-4xl md:text-6xl font-display font-bold text-white leading-tight mb-6">
-              Telemarketing Support
+            <h1 className="text-4xl md:text-6xl font-display font-bold text-white leading-tight mb-6 animate-fade-in">
+              {t('sd.tm.title')}
             </h1>
-            <p className="text-lg md:text-xl text-[#F4F9FC] font-light leading-relaxed">
-              Highly motivated campaigns, accent-fluent telemarketers, and advanced analytics logging to turn directories into actual revenue.
+            <p className="text-lg md:text-xl text-white/90 font-light leading-relaxed">
+              {t('sd.tm.hero_desc')}
             </p>
           </motion.div>
         </div>
@@ -122,21 +123,21 @@ export default function Telemarketing() {
               className="space-y-6"
             >
               <h2 className="text-3xl font-display font-bold text-[#110195] dark:text-white mb-4">
-                Proactive outreach campaigns focused on measurable growth
+                {t('sd.tm.sec1_title')}
               </h2>
               
               <p className="text-lg leading-relaxed text-[#1E293B]/90 dark:text-[#E2E8F0]/90 font-light">
-                We focus on the things that matter, and our leadership teams know how to manage and analyze CRM data, motivate their teams, manage upwards, and stay proactive all the time.
+                {t('sd.tm.sec1_desc1')}
               </p>
               
               <p className="leading-relaxed font-light">
-                Generating sales over the phone is an art built on persistent action, emotional intelligence, and resilient team management. At Oversea Staffing Solutions, we establish complete, turn-key telemarketing campaigns. Our Caribbean agents handle customer questions, verify details, address objections, and finalize sales targets.
+                {t('sd.tm.sec1_desc2')}
               </p>
 
               {/* Bullet Points with Icons */}
               <div className="pt-6 space-y-4">
                 <h3 className="text-xl font-display font-semibold text-[#110195] dark:text-[#FC9905]">
-                  Our Operational Highlights:
+                  {t('sd.tm.point_title')}
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {points.map((point, index) => (
@@ -163,8 +164,8 @@ export default function Telemarketing() {
               <div className="relative group">
                 <div className="absolute -inset-1.5 bg-gradient-to-r from-[#110195] to-[#FC9905] rounded-3xl blur opacity-30 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
                 <img 
-                  src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&q=80&w=800" 
-                  alt="Staffing agents talking to target accounts" 
+                  src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=800" 
+                  alt="High Velocity Dialer Station" 
                   className="relative rounded-2xl shadow-xl max-w-full h-auto object-cover border border-white/10"
                 />
               </div>
@@ -179,7 +180,7 @@ export default function Telemarketing() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-display font-bold text-[#110195] dark:text-white">
-              Why Opt for Our Telemarketing?
+              {t('sd.tm.why_title')}
             </h2>
             <div className="w-16 h-1 bg-gradient-to-r from-[#110195] to-[#FC9905] mx-auto mt-4 rounded-full"></div>
           </div>
@@ -222,21 +223,21 @@ export default function Telemarketing() {
             className="space-y-6"
           >
             <h2 className="text-3xl md:text-5xl font-display font-bold text-white leading-tight">
-              Prêt à accélérer vos ventes ?
+              {t('sd.tm.cta_title')}
             </h2>
             <p className="text-lg text-white/80 font-light max-w-2xl mx-auto">
-              Partner with Oversea Staffing Solutions to establish deep, empathetic connection routes with your clients starting today.
+              {t('sd.tm.cta_desc')}
             </p>
             <div className="pt-4">
               <Link 
                 to="/contact" 
                 className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-[#FC9905] to-[#110195] hover:from-[#110195] hover:to-[#FC9905] text-white font-semibold rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105"
               >
-                Contactez notre équipe <ArrowRight size={18} />
+                {t('sd.tm.cta_btn')} <ArrowRight size={18} />
               </Link>
             </div>
             <p className="text-xs text-white/50 font-light">
-              Réponse assurée sous 24h ouvrées
+              {t('sd.tm.cta_small')}
             </p>
           </motion.div>
         </div>

@@ -14,13 +14,14 @@ import {
 } from 'lucide-react';
 
 import { Link } from 'react-router-dom';
+import { useLanguage } from './LanguageContext';
 
 const statsOverview = [
-  { title: "24/7 Support", desc: "Always available", icon: <Clock className="w-6 h-6" /> },
-  { title: "Top Talent", desc: "Verified professionals", icon: <ShieldCheck className="w-6 h-6" /> },
-  { title: "Fast Placement", desc: "Quick response", icon: <Zap className="w-6 h-6" /> },
-  { title: "500+ Active Agents", desc: "Ready to deploy", icon: <Users className="w-6 h-6" /> },
-  { title: "50+ Global Clients", desc: "Trusted worldwide", icon: <Globe2 className="w-6 h-6" /> }
+  { titleKey: "stats.support.title", descKey: "stats.support.desc", icon: <Clock className="w-6 h-6" /> },
+  { titleKey: "stats.talent.title", descKey: "stats.talent.desc", icon: <ShieldCheck className="w-6 h-6" /> },
+  { titleKey: "stats.placement.title", descKey: "stats.placement.desc", icon: <Zap className="w-6 h-6" /> },
+  { titleKey: "stats.agents.title", descKey: "stats.agents.desc", icon: <Users className="w-6 h-6" /> },
+  { titleKey: "stats.clients.title", descKey: "stats.clients.desc", icon: <Globe2 className="w-6 h-6" /> }
 ];
 
 const jobListings = [
@@ -42,6 +43,7 @@ const jobListings = [
 ];
 
 export default function LandingPage() {
+  const { t } = useLanguage();
   const mouseX = useMotionValue(50);
   const mouseY = useMotionValue(50);
 
@@ -177,7 +179,10 @@ export default function LandingPage() {
                   transition={{ duration: 0.8, delay: 0.1 }}
                   className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-6 tracking-tight leading-tight"
                 >
-                  Your premier Caribbean destination for elite call center staffing.
+                  {t('hero.title').split(' ').slice(0, 3).join(' ')} <br className="hidden md:block" />
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FC9905] to-[#fcd34d]">
+                    {t('hero.title').split(' ').slice(3).join(' ')}
+                  </span>
                 </motion.h1>
                 <motion.p 
                   initial={{ opacity: 0, y: 20 }}
@@ -185,7 +190,7 @@ export default function LandingPage() {
                   transition={{ duration: 0.8, delay: 0.3 }}
                   className="font-sans text-lg md:text-xl text-white/90 leading-relaxed font-light mb-8 lg:pr-8"
                 >
-                  Oversea Staffing Solutions delivers uncompromising excellence, sophisticated service standards, and seamless cultural harmony for discerning enterprises. Transform your customer experience with our nearshore BPO solutions.
+                  {t('hero.subtitle')}
                 </motion.p>
                 
                 <motion.div 
@@ -201,10 +206,10 @@ export default function LandingPage() {
                     Why Choose Us
                   </a>
                   <Link 
-                    to="/contact" 
+                    to="/about-us" 
                     className="bg-white dark:bg-[#1E293B] border-2 border-transparent text-[#110195] dark:text-white hover:bg-transparent hover:border-white hover:text-white px-6 py-3 rounded-[40px] font-semibold text-lg text-center transition-all duration-300"
                   >
-                    Contact Our Team
+                    About Us
                   </Link>
                 </motion.div>
               </div>
@@ -297,7 +302,7 @@ export default function LandingPage() {
 
         {/* STATS / CHIFFRES CLES */}
         <section className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-20 md:-mt-24 mb-24">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 md:gap-6">
             {statsOverview.map((stat, i) => (
               <motion.div
                 key={i}
@@ -305,13 +310,19 @@ export default function LandingPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="bg-white dark:bg-[#1E293B] rounded-2xl p-6 shadow-xl shadow-[#110195]/5 border border-[#FC9905]/10 flex flex-col items-center text-center group hover:-translate-y-1 transition-transform duration-300"
+                className={`bg-white dark:bg-[#1E293B] rounded-2xl p-4 sm:p-6 shadow-xl shadow-[#110195]/5 border border-[#FC9905]/10 flex flex-col items-center text-center group hover:-translate-y-1 transition-transform duration-300 ${
+                  i === 4 ? 'col-span-2 lg:col-span-1' : ''
+                }`}
               >
-                <div className="w-14 h-14 bg-[#F4F9FC] dark:bg-[#0F172A] text-[#FC9905] rounded-full flex items-center justify-center mb-4 group-hover:bg-[#FC9905] group-hover:text-white transition-colors duration-300">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 bg-[#F4F9FC] dark:bg-[#0F172A] text-[#FC9905] rounded-full flex items-center justify-center mb-3 sm:mb-4 group-hover:bg-[#FC9905] group-hover:text-white transition-colors duration-300 shrink-0">
                   {stat.icon}
                 </div>
-                <h3 className="font-display font-bold text-lg text-[#110195] dark:text-white mb-2">{stat.title}</h3>
-                <p className="text-sm text-[#1E293B] dark:text-[#E2E8F0] font-light">{stat.desc}</p>
+                <h3 className="font-display font-bold text-sm sm:text-lg text-[#110195] dark:text-white mb-2 leading-tight">
+                  {t(stat.titleKey)}
+                </h3>
+                <p className="text-xs sm:text-sm text-[#1E293B] dark:text-[#E2E8F0] font-light leading-relaxed">
+                  {t(stat.descKey)}
+                </p>
               </motion.div>
             ))}
           </div>
@@ -321,9 +332,20 @@ export default function LandingPage() {
         <WhyChooseUs />
 
         {/* OUR COMMITMENT */}
-        <section className="relative mt-24 pb-12 pt-16 md:mt-32 md:pb-16 md:pt-24 overflow-visible">
+        <section className="relative mt-12 mb-12 md:mt-32 md:mb-16 overflow-visible">
           {/* Full-width gradient banner */}
-          <div className="w-full bg-gradient-to-r from-[#110195] to-[#FC9905] relative lg:h-[320px]">
+          <div className="w-full bg-gradient-to-r from-[#110195] to-[#FC9905] relative lg:h-[320px] overflow-hidden lg:overflow-visible">
+            
+            {/* Mobile Background Image */}
+            <div className="absolute inset-0 z-10 lg:hidden opacity-20 mix-blend-overlay pointer-events-none">
+              <img 
+                src="https://i.postimg.cc/YSSbz3LG/men.png" 
+                alt="Background" 
+                className="w-full h-full object-cover object-top"
+                referrerPolicy="no-referrer"
+              />
+            </div>
+
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative h-full">
               <div className="flex flex-col lg:flex-row items-center h-full w-full">
                 
@@ -333,28 +355,28 @@ export default function LandingPage() {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6 }}
-                  className="w-full lg:w-[55%] py-10 lg:py-8 order-2 lg:order-2 z-20 flex flex-col justify-center h-full lg:ml-auto"
+                  className="w-full lg:w-[55%] py-12 lg:py-8 order-2 lg:order-2 z-20 flex flex-col justify-center h-full lg:ml-auto"
                 >
                   <h2 className="font-display text-3xl md:text-4xl lg:text-[2.75rem] font-bold text-white mb-4 lg:mb-6 leading-[1.15]">
-                    We provide better<br />customer experiences.
+                    {t('commitment.title.p1')}<br />{t('commitment.title.p2')}
                   </h2>
                   <p className="text-white text-sm md:text-base font-light leading-relaxed max-w-2xl">
-                    Oversea Staffing Solutions aims to deliver a true customer service experience. Each and every contact your customers have with our agents influences your success. We follow the best practices – valuing customer time, maintaining a pleasant attitude, and providing knowledgeable and resourceful information. At Oversea Staffing Solutions, we know we provide exactly what your customers need.
+                    {t('commitment.desc')}
                   </p>
                 </motion.div>
 
-                {/* Image */}
+                {/* Desktop Image */}
                 <motion.div
                   initial={{ opacity: 0, y: 40 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: 0.2 }}
-                  className="w-full lg:w-auto order-1 lg:order-1 flex justify-center lg:justify-start relative z-30 pointer-events-none mt-[-80px] md:mt-[-120px] lg:mt-0 lg:absolute lg:left-0 lg:bottom-0"
+                  className="hidden lg:flex w-full lg:w-auto order-1 lg:order-1 justify-center lg:justify-start relative z-30 pointer-events-none lg:absolute lg:left-0 lg:bottom-0"
                 >
                   <img 
                     src="https://i.postimg.cc/YSSbz3LG/men.png" 
                     alt="Customer Service Representative" 
-                    className="w-[85%] max-w-[320px] md:max-w-[440px] lg:max-w-none lg:w-[460px] xl:w-[500px] h-auto object-bottom drop-shadow-[0_20px_30px_rgba(0,0,0,0.3)] block lg:mb-0"
+                    className="lg:w-[460px] xl:w-[500px] h-auto object-bottom drop-shadow-[0_20px_30px_rgba(0,0,0,0.3)] block lg:mb-0"
                     referrerPolicy="no-referrer"
                   />
                 </motion.div>

@@ -1,0 +1,113 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Global safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == 'contact@overseastaffingsolutions.com' ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+    
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+    
+    function incoming() {
+      return request.resource.data;
+    }
+    
+    function existing() {
+      return resource.data;
+    }
+    
+    function isValidApplication(data) {
+      return ('name' in data) && data.name is string && data.name.size() > 0 && data.name.size() <= 250 &&
+             ('email' in data) && data.email is string && data.email.size() > 0 && data.email.size() <= 250 &&
+             ('phone' in data) && data.phone is string && data.phone.size() <= 50 &&
+             ('date' in data) && data.date is string && data.date.size() <= 100 &&
+             ('roleId' in data) && data.roleId is string && data.roleId.size() <= 100 &&
+             ('status' in data) && data.status is string && data.status.size() <= 100 &&
+             (!('coverLetter' in data) || (data.coverLetter is string && data.coverLetter.size() <= 20000)) &&
+             (!('resumeUrl' in data) || (data.resumeUrl is string && data.resumeUrl.size() <= 2500));
+    }
+
+    function isValidPopup(data) {
+      return ('title' in data) && data.title is string && data.title.size() <= 500 &&
+             ('content' in data) && data.content is string && data.content.size() <= 10000 &&
+             ('isActive' in data) && data.isActive is bool &&
+             (!('imageUrl' in data) || data.imageUrl is string) &&
+             (!('buttonText' in data) || data.buttonText is string) &&
+             (!('buttonLink' in data) || data.buttonLink is string) &&
+             (!('delaySeconds' in data) || data.delaySeconds is number) &&
+             (!('durationSeconds' in data) || data.durationSeconds is number) &&
+             (!('createdAt' in data) || data.createdAt is timestamp || data.createdAt == null);
+    }
+
+    function isValidTestimonial(data) {
+      return ('quote' in data) && data.quote is string && data.quote.size() > 0 && data.quote.size() <= 5000 &&
+             ('author' in data) && data.author is string && data.author.size() > 0 && data.author.size() <= 250 &&
+             ('role' in data) && data.role is string && data.role.size() > 0 && data.role.size() <= 250 &&
+             (!('dateAdded' in data) || data.dateAdded is string);
+    }
+
+    function isValidContact(data) {
+      return ('name' in data) && data.name is string && data.name.size() > 0 && data.name.size() <= 250 &&
+             ('email' in data) && data.email is string && data.email.size() > 0 && data.email.size() <= 250 &&
+             ('message' in data) && data.message is string && data.message.size() > 0 && data.message.size() <= 10005 &&
+             (!('createdAt' in data) || data.createdAt is string);
+    }
+
+    // Applications collection
+    match /applications/{applicationId} {
+      allow read: if isAdmin();
+      allow create: if isValidId(applicationId) && isValidApplication(incoming()) && incoming().status == 'New';
+      allow update: if isAdmin() && isValidApplication(incoming()) && 
+                    // Action: Change Status
+                    incoming().diff(existing()).affectedKeys().hasOnly(['status']);
+      allow delete: if isAdmin();
+    }
+    
+    // Admins collection
+    match /admins/{adminId} {
+      allow read: if isAdmin();
+      // Only existing admins can add new admins
+      allow create: if isAdmin() && isValidId(adminId) && 
+                    incoming().keys().hasAll(['email', 'role']) && 
+                    incoming().email is string && 
+                    incoming().role == 'admin';
+      allow delete: if isAdmin();
+    }
+    
+    // Popups collection
+    match /popups/{popupId} {
+      allow read: if true;
+      allow create, update: if isAdmin() && isValidPopup(incoming());
+      allow delete: if isAdmin();
+    }
+    
+    // Testimonials collection
+    match /testimonials/{testimonialId} {
+      allow read: if true;
+      allow create, update: if isAdmin() && isValidTestimonial(incoming());
+      allow delete: if isAdmin();
+    }
+
+    // Contacts collection
+    match /contacts/{contactId} {
+      allow read: if isAdmin();
+      allow create: if isValidContact(incoming());
+      allow update, delete: if isAdmin();
+    }
+  }
+}

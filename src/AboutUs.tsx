@@ -33,6 +33,33 @@ export default function AboutUs() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+
+    // Dynamic injection of the DesignRush agency reviews widget script
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    // Use a cache-buster query param so the browser executes the script's initialization code on every mount
+    script.src = 'https://www.designrush.com/topbest/js/widgets/agency-reviews.js?v=' + Date.now();
+    script.async = true;
+
+    script.onload = () => {
+      // Programmatically dispatch load and DOMContentLoaded events to trigger the widget's internal load listeners
+      try {
+        window.dispatchEvent(new Event('load'));
+        window.dispatchEvent(new Event('DOMContentLoaded'));
+        document.dispatchEvent(new Event('DOMContentLoaded'));
+      } catch (e) {
+        console.error("Error dispatching events for DesignRush widget:", e);
+      }
+    };
+
+    document.body.appendChild(script);
+
+    return () => {
+      // Cleanup the script tag on unmount to prevent duplicated scripts
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
+      }
+    };
   }, []);
 
   return (
@@ -154,6 +181,49 @@ export default function AboutUs() {
               </motion.div>
             ))}
           </div>
+
+          {/* DESIGNRUSH REVIEWS SECTION */}
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mt-24 mb-12"
+          >
+            <div className="text-center mb-10">
+              <h2 className="text-3xl font-bold text-[#110195] dark:text-white mb-4 font-display">
+                {t('about.reviews.title')}
+              </h2>
+              <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                {t('about.reviews.subtitle')}
+              </p>
+            </div>
+
+            <div className="bg-white dark:bg-[#0F172A] p-6 md:p-10 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-800/80 max-w-4xl mx-auto flex flex-col items-center">
+              {/* Widget container element that DesignRush's script targets */}
+              <div className="w-full flex justify-center min-h-[150px]">
+                <div 
+                  data-designrush-widget="" 
+                  data-agency-id="119515" 
+                  data-style="light" 
+                  aria-label="DesignRush agency reviews section"
+                />
+              </div>
+              <noscript>
+                <div className="text-center py-4">
+                  <a 
+                    href="https://www.designrush.com/agency/profile/oversea-staffing-solution#reviews" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    aria-label="Visit Oversea Staffing Solution reviews on DesignRush"
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-[#110195] hover:bg-[#110195]/90 text-white rounded-xl transition-all font-semibold shadow-md"
+                  >
+                    REVIEW US ON DESIGNRUSH
+                  </a>
+                </div>
+              </noscript>
+            </div>
+          </motion.div>
         </div>
       </div>
       <Footer />

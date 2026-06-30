@@ -23,6 +23,7 @@ import TermsOfService from "./TermsOfService";
 import ApplicationForm from "./ApplicationForm";
 import AdminDashboard from "./AdminDashboard";
 import { LanguageProvider } from "./LanguageContext";
+import AiChatBubble from "./AiChatBubble";
 
 export default function App() {
   return (
@@ -47,6 +48,7 @@ export default function App() {
           <Route path="/terms-of-service" element={<TermsOfService />} />
           <Route path="/admin" element={<AdminDashboard />} />
         </Routes>
+        <AiChatBubble />
       </Router>
     </LanguageProvider>
   );

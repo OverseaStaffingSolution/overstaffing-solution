@@ -5,16 +5,20 @@
       "description": "A job application submitted by a candidate",
       "type": "object",
       "properties": {
+        "firstName": { "type": "string" },
+        "lastName": { "type": "string" },
         "name": { "type": "string" },
         "email": { "type": "string" },
         "phone": { "type": "string" },
-        "date": { "type": "string" },
+        "category": { "type": "string" },
         "roleId": { "type": "string" },
+        "date": { "type": "string" },
         "status": { "type": "string", "enum": ["New", "Reviewed", "Interviewed", "Rejected", "Hired"] },
         "coverLetter": { "type": "string" },
-        "resumeUrl": { "type": "string" }
+        "resumeName": { "type": "string" },
+        "resumeData": { "type": "string" }
       },
-      "required": ["name", "email", "phone", "date", "roleId", "status"]
+      "required": ["email", "phone", "status"]
     },
     "Admin": {
       "title": "Admin",

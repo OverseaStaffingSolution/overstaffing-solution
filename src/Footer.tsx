@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { MapPin, Linkedin, Facebook, Instagram, Sun, Moon } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useLanguage } from './LanguageContext';
 
 export default function Footer() {
+  const location = useLocation();
   const [isDarkMode, setIsDarkMode] = useState(false);
   const { t } = useLanguage();
+
+  if (location.pathname.startsWith('/admin')) {
+    return null;
+  }
 
   useEffect(() => {
     // Check initial dark mode preference
@@ -92,7 +97,7 @@ export default function Footer() {
                   </a>
                 </li>
               ))}
-              <li>
+              <li className="hidden">
                 <Link to="/admin" className="text-[#F4F9FC]/80 hover:text-[#FC9905] transition-colors flex items-center gap-1">
                   {t('footer.admin')}
                 </Link>

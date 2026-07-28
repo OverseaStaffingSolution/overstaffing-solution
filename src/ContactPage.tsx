@@ -41,7 +41,7 @@ export default function ContactPage() {
     <>
       <div className="font-sans text-[#1E293B] dark:text-[#E2E8F0] bg-[#F4F9FC] dark:bg-[#020617] min-h-screen pt-0 selection:bg-[#FC9905]/20 selection:text-[#110195] transition-colors duration-300">
         {/* HERO SECTION */}
-        <section className="bg-gradient-to-r from-[#110195] via-[#110195]/90 to-[#FC9905]/10 pt-[160px] pb-16 md:pt-[180px] md:pb-24 relative overflow-hidden mb-16">
+        <section className="bg-gradient-to-r from-[#110195] via-[#110195] to-[#FC9905] pt-[160px] pb-16 md:pt-[180px] md:pb-24 relative overflow-hidden mb-16">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(252,153,5,0.1),transparent)] pointer-events-none" />
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             {/* Top Actions: Breadcrumb & Back button */}

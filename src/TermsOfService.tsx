@@ -16,7 +16,7 @@ export default function TermsOfService() {
   return (
     <div className="min-h-screen bg-[#F4F9FC] dark:bg-[#0F172A] text-[#1E293B] dark:text-[#E2E8F0] transition-colors duration-300 pt-0">
       {/* HERO SECTION */}
-      <section className="bg-gradient-to-r from-[#110195] via-[#110195]/90 to-[#FC9905]/10 pt-[160px] pb-16 md:pt-[180px] md:pb-24 relative overflow-hidden">
+      <section className="bg-gradient-to-r from-[#110195] via-[#110195] to-[#FC9905] pt-[160px] pb-16 md:pt-[180px] md:pb-24 relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(252,153,5,0.1),transparent)] pointer-events-none" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           {/* Top Actions: Breadcrumb & Back button */}

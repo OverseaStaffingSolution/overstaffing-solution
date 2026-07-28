@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LandingPage from "./LandingPage";
 import ContactPage from "./ContactPage";
@@ -22,10 +22,16 @@ import PrivacyPolicy from "./PrivacyPolicy";
 import TermsOfService from "./TermsOfService";
 import ApplicationForm from "./ApplicationForm";
 import AdminDashboard from "./AdminDashboard";
+import ProtectedRoute from "./ProtectedRoute";
 import { LanguageProvider } from "./LanguageContext";
 import AiChatBubble from "./AiChatBubble";
 
 export default function App() {
+  useEffect(() => {
+    document.documentElement.classList.remove('dark');
+    document.documentElement.classList.add('light');
+  }, []);
+
   return (
     <LanguageProvider>
       <Router>
@@ -46,7 +52,7 @@ export default function App() {
           <Route path="/careers/apply/:jobId" element={<ApplicationForm />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-of-service" element={<TermsOfService />} />
-          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
         </Routes>
         <AiChatBubble />
       </Router>

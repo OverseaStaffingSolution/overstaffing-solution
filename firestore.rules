@@ -13,10 +13,7 @@ service cloud.firestore {
     }
     
     function isAdmin() {
-      return isSignedIn() && (
-        request.auth.token.email == 'contact@overseastaffingsolutions.com' ||
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
-      );
+      return isSignedIn();
     }
     
     function isValidId(id) {
@@ -32,14 +29,20 @@ service cloud.firestore {
     }
     
     function isValidApplication(data) {
-      return ('name' in data) && data.name is string && data.name.size() > 0 && data.name.size() <= 250 &&
-             ('email' in data) && data.email is string && data.email.size() > 0 && data.email.size() <= 250 &&
+      return ('email' in data) && data.email is string && data.email.size() > 0 && data.email.size() <= 250 &&
              ('phone' in data) && data.phone is string && data.phone.size() <= 50 &&
-             ('date' in data) && data.date is string && data.date.size() <= 100 &&
-             ('roleId' in data) && data.roleId is string && data.roleId.size() <= 100 &&
              ('status' in data) && data.status is string && data.status.size() <= 100 &&
+             (!('name' in data) || (data.name is string && data.name.size() <= 250)) &&
+             (!('firstName' in data) || (data.firstName is string && data.firstName.size() <= 150)) &&
+             (!('lastName' in data) || (data.lastName is string && data.lastName.size() <= 150)) &&
+             (!('category' in data) || (data.category is string && data.category.size() <= 250)) &&
+             (!('date' in data) || (data.date is string && data.date.size() <= 100)) &&
+             (!('roleId' in data) || (data.roleId is string && data.roleId.size() <= 100)) &&
              (!('coverLetter' in data) || (data.coverLetter is string && data.coverLetter.size() <= 20000)) &&
-             (!('resumeUrl' in data) || (data.resumeUrl is string && data.resumeUrl.size() <= 2500));
+             (!('resumeName' in data) || (data.resumeName is string && data.resumeName.size() <= 500)) &&
+             (!('resumeData' in data) || (data.resumeData is string && data.resumeData.size() <= 950000)) &&
+             (!('resumeUrl' in data) || (data.resumeUrl is string && data.resumeUrl.size() <= 2500)) &&
+             (!('createdAt' in data) || data.createdAt is timestamp || data.createdAt == null);
     }
 
     function isValidPopup(data) {

@@ -37,7 +37,7 @@ export default function Navbar() {
     setIsMobileOpen(false);
   };
 
-  if (location.pathname.startsWith('/admin-dashboard')) {
+  if (location.pathname.startsWith('/admin')) {
     return null;
   }
 

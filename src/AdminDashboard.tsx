@@ -14,6 +14,7 @@ import {
   EmailAuthProvider
 } from 'firebase/auth';
 import { db, auth } from './firebase';
+import { sanitizeInput } from './utils/security';
 
 interface Testimonial {
   id: string;
@@ -339,12 +340,29 @@ export default function AdminDashboard() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+
+    const cleanQuote = sanitizeInput(formData.quote, 5000);
+    const cleanAuthor = sanitizeInput(formData.author, 250);
+    const cleanRole = sanitizeInput(formData.role, 250);
+
+    if (!cleanQuote || !cleanAuthor || !cleanRole) {
+      alert('Veuillez remplir tous les champs du témoignage.');
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
       if (editingId) {
-        await updateDoc(doc(db, 'testimonials', editingId), { ...formData });
+        await updateDoc(doc(db, 'testimonials', editingId), {
+          quote: cleanQuote,
+          author: cleanAuthor,
+          role: cleanRole
+        });
       } else {
         await addDoc(collection(db, 'testimonials'), {
-          ...formData,
+          quote: cleanQuote,
+          author: cleanAuthor,
+          role: cleanRole,
           dateAdded: new Date().toISOString()
         });
       }

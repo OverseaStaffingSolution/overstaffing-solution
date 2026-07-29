@@ -20,6 +20,7 @@ import Translator from "./Translator";
 import TechnicalSupport from "./TechnicalSupport";
 import PrivacyPolicy from "./PrivacyPolicy";
 import TermsOfService from "./TermsOfService";
+import LegalNotice from "./LegalNotice";
 import ApplicationForm from "./ApplicationForm";
 import AdminDashboard from "./AdminDashboard";
 import ProtectedRoute from "./ProtectedRoute";
@@ -52,6 +53,7 @@ export default function App() {
           <Route path="/careers/apply/:jobId" element={<ApplicationForm />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-of-service" element={<TermsOfService />} />
+          <Route path="/legal-notice" element={<LegalNotice />} />
           <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
         </Routes>
         <AiChatBubble />

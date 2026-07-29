@@ -5,6 +5,7 @@ import { useLanguage } from './LanguageContext';
 import { 
   MessageSquare, X, Send, Key, Check, Info, AlertCircle, HelpCircle, RefreshCw
 } from 'lucide-react';
+import { sanitizeInput } from './utils/security';
 
 interface ChatMessage {
   role: 'user' | 'model';
@@ -223,12 +224,13 @@ export default function AiChatBubble() {
   };
 
   const handleSend = async (text: string) => {
-    if (!text.trim() || isLoading) return;
+    const cleanText = sanitizeInput(text, 1500);
+    if (!cleanText || isLoading) return;
 
     // Append user message
     const userMsg: ChatMessage = {
       role: 'user',
-      parts: [{ text: text.trim() }]
+      parts: [{ text: cleanText }]
     };
 
     const updatedMessages = [...messages, userMsg];

@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { Loader2, KeyRound, Lock, ShieldAlert, Clock } from 'lucide-react';
 import { onAuthStateChanged, User as FirebaseUser, signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from './firebase';
+import { sanitizeEmail, isValidEmail } from './utils/security';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -75,9 +76,15 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
       return;
     }
 
+    const cleanEmail = sanitizeEmail(email);
+    if (!isValidEmail(cleanEmail)) {
+      setAuthError('Veuillez entrer une adresse e-mail valide.');
+      return;
+    }
+
     setIsAuthSubmitting(true);
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      await signInWithEmailAndPassword(auth, cleanEmail, password);
       // Reset rate limiting on successful login
       setAttempts(0);
       setLockoutUntil(0);

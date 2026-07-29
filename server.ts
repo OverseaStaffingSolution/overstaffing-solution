@@ -10,17 +10,29 @@ async function startServer() {
   const app = express();
   const PORT = 3000;
 
-  app.use(express.json());
+  app.use(express.json({ limit: '10mb' }));
+
+  // Security Headers Middleware
+  app.use((req, res, next) => {
+    res.setHeader("X-Content-Type-Options", "nosniff");
+    res.setHeader("X-Frame-Options", "SAMEORIGIN");
+    res.setHeader("X-XSS-Protection", "1; mode=block");
+    res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+    next();
+  });
 
   // API Route for AI Chatbot
   app.post("/api/chat", async (req, res) => {
     try {
       const { message, history, userApiKey } = req.body;
 
-      if (!message) {
-        res.status(400).json({ error: "Message is required" });
+      if (!message || typeof message !== 'string') {
+        res.status(400).json({ error: "Message is required and must be text" });
         return;
       }
+
+      // Sanitize input message
+      const cleanMessage = message.trim().replace(/\0/g, '').replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '').substring(0, 1500);
 
       // Use user-provided API key from client-side settings, or fall back to system env
       const apiKey = userApiKey || process.env.GEMINI_API_KEY;
@@ -84,7 +96,7 @@ Critical Link Formatting Guidelines:
       const contents = [...(history || [])];
       contents.push({
         role: "user",
-        parts: [{ text: message }]
+        parts: [{ text: cleanMessage }]
       });
 
       for (const model of modelsToTry) {

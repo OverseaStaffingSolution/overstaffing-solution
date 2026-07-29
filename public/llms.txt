@@ -1,0 +1,31 @@
+# Oversea Staffing Solutions - LLM Site Index
+
+> Elite Nearshore Call Center Staffing & Business Process Outsourcing (BPO) in the Caribbean.
+
+Oversea Staffing Solutions connects global enterprises with highly skilled, bilingual Caribbean talent. We deliver high-impact customer support, technical assistance, sales lead generation, live chat management, market research, and translation services.
+
+## Full Consolidated Text
+- [llms-full.txt](https://www.overseastaffingsolutions.com/llms-full.txt): Complete concatenated text containing all site documentation and service details for single-file AI processing.
+
+## Markdown Mirrors (.md)
+- [Home Page Mirror](https://www.overseastaffingsolutions.com/index.md): Raw markdown for the home page.
+- [About Us Mirror](https://www.overseastaffingsolutions.com/about-us.md): Raw markdown for mission, values, and nearshore advantage.
+- [Contact Mirror](https://www.overseastaffingsolutions.com/contact.md): Raw markdown for contact details and inquiry procedures.
+
+### Services Markdown Mirrors
+- [Customer Service](https://www.overseastaffingsolutions.com/services/customer-service.md): Inbound/outbound support and omnichannel customer care.
+- [Lead Generation](https://www.overseastaffingsolutions.com/services/lead-generation.md): Prospecting, cold outreach, and pipeline growth.
+- [Live Chat Support](https://www.overseastaffingsolutions.com/services/live-chat-support.md): Real-time chat, web support, and ticket handling.
+- [Market Research](https://www.overseastaffingsolutions.com/services/market-research.md): Surveys, competitor analysis, and feedback gathering.
+- [Sales Lead Qualification](https://www.overseastaffingsolutions.com/services/sales-lead-qualification.md): BANT qualification and calendar appointment setting.
+- [Telemarketing](https://www.overseastaffingsolutions.com/services/telemarketing.md): Tele-sales, win-back campaigns, and customer outreach.
+
+### Careers Markdown Mirrors
+- [Customer Service Rep](https://www.overseastaffingsolutions.com/careers/customer-service-representative.md): Support agent position description and requirements.
+- [Bilingual Translator](https://www.overseastaffingsolutions.com/careers/translator.md): Translation and localization specialist opportunity.
+- [Technical Support Specialist](https://www.overseastaffingsolutions.com/careers/technical-support.md): Tier 1/2 IT and technical support role.
+
+### Legal & Policy Markdown Mirrors
+- [Privacy Policy](https://www.overseastaffingsolutions.com/privacy-policy.md): Data collection, encryption, and candidate privacy details.
+- [Terms of Service](https://www.overseastaffingsolutions.com/terms-of-service.md): Platform usage terms and intellectual property rights.
+- [Legal Notice](https://www.overseastaffingsolutions.com/legal-notice.md): Publisher, web hosting, development, and intellectual property information.

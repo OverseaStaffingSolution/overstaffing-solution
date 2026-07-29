@@ -115,6 +115,7 @@ export default function Footer() {
         <div className="flex space-x-6 items-center flex-wrap gap-y-2">
           <Link to="/privacy-policy" className="hover:text-white transition-colors">{t('footer.privacy')}</Link>
           <Link to="/terms-of-service" className="hover:text-white transition-colors">{t('footer.terms')}</Link>
+          <Link to="/legal-notice" className="hover:text-white transition-colors">{t('footer.legalNotice')}</Link>
           <button
             onClick={toggleDarkMode}
             className="p-1 rounded-full text-[#F4F9FC]/50 hover:text-white hover:bg-white/10 transition-colors ml-4 focus:outline-none"

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { Send, Mail, User, MessageSquare } from 'lucide-react';
+import { Send, Mail, User, MessageSquare, AlertCircle } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import { collection, addDoc } from 'firebase/firestore';
 import { db, auth } from './firebase';
+import { sanitizeInput, sanitizeEmail, isValidEmail, checkRateLimit } from './utils/security';
 
 enum OperationType {
   CREATE = 'create',
@@ -61,18 +62,48 @@ export default function ContactForm() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMessage('');
+
+    // Rate Limiting Check (max 1 submission per 5 seconds)
+    const rateCheck = checkRateLimit('contact_form', 5000);
+    if (!rateCheck.allowed) {
+      setErrorMessage(`Veuillez attendre ${rateCheck.waitSeconds}s avant de renvoyer un message. / Please wait ${rateCheck.waitSeconds}s before submitting again.`);
+      return;
+    }
+
+    // Sanitize & Validate Inputs
+    const cleanName = sanitizeInput(formData.name, 100);
+    const cleanEmail = sanitizeEmail(formData.email);
+    const cleanMessage = sanitizeInput(formData.message, 3000);
+
+    if (!cleanName || cleanName.length < 2) {
+      setErrorMessage("Veuillez saisir un nom valide. / Please enter a valid name.");
+      return;
+    }
+
+    if (!isValidEmail(cleanEmail)) {
+      setErrorMessage("Veuillez saisir une adresse email valide. / Please enter a valid email address.");
+      return;
+    }
+
+    if (!cleanMessage || cleanMessage.length < 5) {
+      setErrorMessage("Votre message est trop court. / Your message is too short.");
+      return;
+    }
+
     setIsSubmitting(true);
     
     try {
       // 1. Enregistrer dans Firebase / Save to Firebase
       try {
         await addDoc(collection(db, 'contacts'), {
-          name: formData.name,
-          email: formData.email,
-          message: formData.message,
+          name: cleanName,
+          email: cleanEmail,
+          message: cleanMessage,
           createdAt: new Date().toISOString()
         });
       } catch (firestoreErr) {
@@ -88,9 +119,9 @@ export default function ContactForm() {
             'Accept': 'application/json'
           },
           body: JSON.stringify({
-            name: formData.name,
-            email: formData.email,
-            message: formData.message,
+            name: cleanName,
+            email: cleanEmail,
+            message: cleanMessage,
             _subject: "New Contact Form Submission from Oversea Staffing Solutions"
           })
         });
@@ -107,7 +138,7 @@ export default function ContactForm() {
       }, 5000);
     } catch (error) {
       console.error("Form submission error", error);
-      alert("Erreur lors de l'envoi du message. / Failed to submit your message. Please try again.");
+      setErrorMessage("Erreur lors de l'envoi du message. / Failed to submit your message. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -193,6 +224,12 @@ export default function ContactForm() {
               )}
 
               <form onSubmit={handleSubmit} className="space-y-6">
+                {errorMessage && (
+                  <div className="p-3 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/50 rounded-xl text-red-600 dark:text-red-300 text-sm flex items-center gap-2">
+                    <AlertCircle className="w-5 h-5 shrink-0" />
+                    <span>{errorMessage}</span>
+                  </div>
+                )}
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-[#1E293B] dark:text-[#E2E8F0] mb-2 px-1">Full Name</label>
                   <div className="relative">

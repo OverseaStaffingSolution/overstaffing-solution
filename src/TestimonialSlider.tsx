@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight, Star, X } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from './firebase';
+import { sanitizeInput, checkRateLimit } from './utils/security';
 
 interface Testimonial {
   quote: string;
@@ -49,10 +50,33 @@ export default function TestimonialSlider() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
     setErrorMessage('');
+
+    // Rate Limit check
+    const rateCheck = checkRateLimit('testimonial_form', 5000);
+    if (!rateCheck.allowed) {
+      setErrorMessage(`Veuillez attendre ${rateCheck.waitSeconds}s avant de soumettre à nouveau.`);
+      return;
+    }
+
+    const cleanFullName = sanitizeInput(formData.fullName, 100);
+    const cleanRole = sanitizeInput(formData.role, 100);
+    const cleanCompany = sanitizeInput(formData.company, 100);
+    const cleanComment = sanitizeInput(formData.comment, 3000);
+
+    if (!cleanFullName || cleanFullName.length < 2) {
+      setErrorMessage("Veuillez saisir votre nom complet.");
+      return;
+    }
+
+    if (!cleanComment || cleanComment.length < 5) {
+      setErrorMessage("Veuillez saisir un commentaire plus détaillé.");
+      return;
+    }
+
+    setIsSubmitting(true);
     
-    // Using Web3Forms endpoint. Replace "YOUR_ACCESS_KEY_HERE" with your actual access key.
+    // Using Web3Forms endpoint.
     const accessKey = "YOUR_ACCESS_KEY_HERE";
     
     try {
@@ -64,11 +88,14 @@ export default function TestimonialSlider() {
         },
         body: JSON.stringify({
           access_key: accessKey,
-          subject: `Nouveau témoignage de ${formData.fullName} (${selectedRating} étoiles)`,
+          subject: `Nouveau témoignage de ${cleanFullName} (${selectedRating} étoiles)`,
           from_name: "Oversea Staffing Solutions",
           to_email: "contact@overseastaffingsolutions.com",
           rating: selectedRating,
-          ...formData
+          fullName: cleanFullName,
+          role: cleanRole,
+          company: cleanCompany,
+          comment: cleanComment
         })
       });
       

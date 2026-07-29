@@ -1,11 +1,19 @@
 import { Handler } from "@netlify/functions";
 
+const securityHeaders = {
+  "Content-Type": "application/json",
+  "X-Content-Type-Options": "nosniff",
+  "X-Frame-Options": "SAMEORIGIN",
+  "X-XSS-Protection": "1; mode=block",
+  "Referrer-Policy": "strict-origin-when-cross-origin"
+};
+
 export const handler: Handler = async (event, context) => {
   // Only allow POST
   if (event.httpMethod !== "POST") {
     return {
       statusCode: 405,
-      headers: { "Content-Type": "application/json" },
+      headers: securityHeaders,
       body: JSON.stringify({ error: "Method Not Allowed" }),
     };
   }
@@ -14,13 +22,16 @@ export const handler: Handler = async (event, context) => {
     const body = JSON.parse(event.body || "{}");
     const { message, history, userApiKey } = body;
 
-    if (!message) {
+    if (!message || typeof message !== "string") {
       return {
         statusCode: 400,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ error: "Message is required" }),
+        headers: securityHeaders,
+        body: JSON.stringify({ error: "Message is required and must be text" }),
       };
     }
+
+    // Sanitize input message
+    const cleanMessage = message.trim().replace(/\0/g, '').replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '').substring(0, 1500);
 
     // Use user-provided API key from client-side settings, or fall back to system env
     const apiKey = userApiKey || process.env.GEMINI_API_KEY;
@@ -90,7 +101,7 @@ Critical Link Formatting Guidelines:
     const contents = [...(history || [])];
     contents.push({
       role: "user",
-      parts: [{ text: message }]
+      parts: [{ text: cleanMessage }]
     });
 
     for (const model of modelsToTry) {
@@ -158,21 +169,21 @@ Critical Link Formatting Guidelines:
     if (responseText) {
       return {
         statusCode: 200,
-        headers: { "Content-Type": "application/json" },
+        headers: securityHeaders,
         body: JSON.stringify({ text: responseText }),
       };
     } else {
       const finalErrorMsg = lastError?.message || "Impossible d'obtenir une réponse de la part des modèles Gemini configurés.";
       return {
         statusCode: 500,
-        headers: { "Content-Type": "application/json" },
+        headers: securityHeaders,
         body: JSON.stringify({ error: finalErrorMsg }),
       };
     }
   } catch (error: any) {
     return {
       statusCode: 500,
-      headers: { "Content-Type": "application/json" },
+      headers: securityHeaders,
       body: JSON.stringify({ error: error.message || "An error occurred while calling the AI model." }),
     };
   }

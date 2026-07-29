@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, Upload, Send, CheckCircle, Briefcase, Paperclip } from 'lucide-react';
+import { ArrowLeft, Upload, Send, CheckCircle, Briefcase, Paperclip, AlertCircle } from 'lucide-react';
 import { db, auth } from './firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import Footer from './Footer';
 import { useLanguage } from './LanguageContext';
+import { sanitizeInput, sanitizeEmail, isValidEmail, isValidPhone, checkRateLimit } from './utils/security';
 
 enum OperationType {
   CREATE = 'create',
@@ -135,23 +136,68 @@ export default function ApplicationForm() {
     }
   };
 
+  const [formError, setFormError] = useState<string | null>(null);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setFormError(null);
+
+    // Rate limit check (max 1 submission per 5s)
+    const rateCheck = checkRateLimit('application_form', 5000);
+    if (!rateCheck.allowed) {
+      setFormError(`Veuillez attendre ${rateCheck.waitSeconds}s avant de soumettre à nouveau.`);
+      return;
+    }
+
+    // Sanitize fields
+    const cleanFirstName = sanitizeInput(formData.firstName, 100);
+    const cleanLastName = sanitizeInput(formData.lastName, 100);
+    const cleanEmail = sanitizeEmail(formData.email);
+    const cleanPhone = sanitizeInput(formData.phone, 30);
+    const cleanCoverLetter = sanitizeInput(formData.coverLetter, 5000);
+
+    if (!cleanFirstName || cleanFirstName.length < 2) {
+      setFormError('Veuillez entrer un prénom valide. / Please enter a valid first name.');
+      return;
+    }
+
+    if (!cleanLastName || cleanLastName.length < 2) {
+      setFormError('Veuillez entrer un nom valide. / Please enter a valid last name.');
+      return;
+    }
+
+    if (!isValidEmail(cleanEmail)) {
+      setFormError('Veuillez entrer une adresse e-mail valide. / Please enter a valid email address.');
+      return;
+    }
+
+    if (!isValidPhone(cleanPhone)) {
+      setFormError('Veuillez entrer un numéro de téléphone valide. / Please enter a valid phone number.');
+      return;
+    }
+
+    if (!fileBase64 && !fileName) {
+      setFormError('Veuillez joindre votre CV (Format PDF/DOC). / Please upload your resume.');
+      return;
+    }
+
     setIsSubmitting(true);
     
     try {
       const category = getCategory(jobId);
+      const cleanResumeName = sanitizeInput(fileName || 'Resume.pdf', 200);
+
       try {
         await addDoc(collection(db, 'applications'), {
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          name: `${formData.firstName} ${formData.lastName}`.trim(),
-          email: formData.email,
-          phone: formData.phone,
-          coverLetter: formData.coverLetter || '',
+          firstName: cleanFirstName,
+          lastName: cleanLastName,
+          name: `${cleanFirstName} ${cleanLastName}`.trim(),
+          email: cleanEmail,
+          phone: cleanPhone,
+          coverLetter: cleanCoverLetter || '',
           category: category,
           roleId: actualRoleId,
-          resumeName: fileName || 'Resume.pdf',
+          resumeName: cleanResumeName,
           resumeData: fileBase64 || '',
           status: 'New',
           date: new Date().toISOString().split('T')[0],
@@ -163,7 +209,7 @@ export default function ApplicationForm() {
       setIsSuccess(true);
     } catch (error) {
       console.error("Error submitting application", error);
-      alert(t('app.error_submit'));
+      setFormError(t('app.error_submit'));
     } finally {
       setIsSubmitting(false);
     }
@@ -237,8 +283,15 @@ export default function ApplicationForm() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95 }}
               onSubmit={handleSubmit}
-              className="bg-white dark:bg-[#1E293B] shadow-xl rounded-3xl p-8 md:p-12 border border-gray-100 dark:border-gray-800"
+              className="bg-white dark:bg-[#1E293B] shadow-xl rounded-3xl p-8 md:p-12 border border-gray-100 dark:border-gray-800 space-y-6"
             >
+              {formError && (
+                <div className="p-4 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/50 rounded-2xl text-red-600 dark:text-red-300 text-sm flex items-center gap-3">
+                  <AlertCircle className="w-5 h-5 shrink-0" />
+                  <span>{formError}</span>
+                </div>
+              )}
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div>
                   <label htmlFor="firstName" className="block text-sm font-semibold text-[#1E293B] dark:text-white mb-2">{t('app.first_name')}</label>

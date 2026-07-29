@@ -25,6 +25,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'footer.admin': 'Admin Dashboard',
     'footer.privacy': 'Privacy Policy',
     'footer.terms': 'Terms of Service',
+    'footer.legalNotice': 'Legal Notice',
     'footer.allRightsReserved': 'All rights reserved.',
 
     // Landing Page
@@ -484,6 +485,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'footer.admin': 'Tableau de Bord Admin',
     'footer.privacy': 'Politique de Confidentialité',
     'footer.terms': 'Conditions d\'Utilisation',
+    'footer.legalNotice': 'Mentions Légales',
     'footer.allRightsReserved': 'Tous droits réservés.',
 
     // Landing Page
